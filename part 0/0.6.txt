@@ -1,0 +1,5 @@
+note over browser:
+note created, added to notes list, note list rerendered on page
+end note
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server-->browser: HTTP status code 201 (Created)
