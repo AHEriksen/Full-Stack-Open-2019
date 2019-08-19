@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Filter = ({newSearch, handleNewSearch}) => (
   <div>
@@ -24,15 +25,16 @@ const PersonForm = ({addPerson, newName, handleNameChange,
 const Persons = ({display}) => display();
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]);
+  const [persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('');
   const [ newNum, setNewNum ] = useState('');
   const [ newSearch, setNewSearch ] = useState('');
+
+  useEffect(() => {
+    axios
+         .get('http://localhost:3001/persons')
+         .then(response => setPersons(response.data))
+  }, []);
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumChange = (event) => setNewNum(event.target.value);
@@ -50,8 +52,9 @@ const App = () => {
   };
 
   const display = () =>
-    persons.filter((person) => person.name.toLowerCase().includes(newSearch.toLowerCase()))
-    .map((person) => 
+    persons.filter((person) =>
+              person.name.toLowerCase().includes(newSearch.toLowerCase()))
+           .map((person) => 
       <p key={person.name}>{person.name} {person.number}</p>);
 
   return (
