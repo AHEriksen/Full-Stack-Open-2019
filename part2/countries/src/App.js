@@ -4,45 +4,67 @@ import axios from 'axios';
 const App = () => {
   const [newSearch, setNewSearch] = useState('');
   const [countryData, setCountryData] = useState([]);
+  const [showCountry, setShowCountry] = useState(new Map());
 
   useEffect( () => {
     axios
          .get('https://restcountries.eu/rest/v2/all')
-         .then(response => setCountryData(response.data))
+         .then(response => {
+           setCountryData(response.data);
+           setShowCountry(new Map(response.data.map((country) => [country.name, false])));
+          }
+         )
   }, []);
 
   const searchHandler = (event) => setNewSearch(event.target.value);
 
+  const displayMultiple = (results) => {
+    return results.map((country) =>
+        <div key={country.name}>{country.name}
+          <button onClick={() => toggleCountry(country.name)}>show</button>
+          { showCountry.get(country.name) &&
+            <div>{displayCountryHandler(country)}</div>
+          }
+          
+        </div>);
+  }
+
+  const toggleCountry = (name) => {
+    const copy = new Map(showCountry);
+    copy.set(name, !(copy.get(name)));
+    setShowCountry(copy);
+  }
+
+  const displayCountryHandler = (country) => {
+    return (<div>
+      <h1>
+        {country.name}
+      </h1>
+      <p>
+        capital {country.capital}
+      </p>
+      <p>
+        population {country.population}
+      </p>
+      <h2>
+        languages
+      </h2>
+      <ul>
+        {country.languages.map((language) => <li key={language.name}>{language.name}</li>)}
+      </ul>
+      <img src={country.flag} alt={`Flag of ${country.name}`} height="100" />
+    </div>);
+  }
+
   const displayResults = () => {
     const results = countryData.filter((country) =>
       country.name.toLowerCase().includes(newSearch.toLowerCase()));
-
     if (results.length > 10)
       return <p>Too many matches, specify another filter</p>;
     else if (results.length > 1)
-      return results.map((country) => <p key={country.name}>{country.name}</p>);
+      return displayMultiple(results);
     else if (results.length === 1)
-      return (
-        <div>
-          <h1>
-            {results[0].name}
-          </h1>
-          <p>
-            capital {results[0].capital}
-          </p>
-          <p>
-            population {results[0].population}
-          </p>
-          <h2>
-            languages
-          </h2>
-          <ul>
-            {results[0].languages.map((language) => <li key={language.name}>{language.name}</li>)}
-          </ul>
-          <img src={results[0].flag} alt={`Flag of ${results[0].name}`}
-               height="100"/>
-        </div>
-      )
+      return displayCountryHandler(results[0]);
   }
 
   return (
