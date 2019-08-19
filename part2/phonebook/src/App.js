@@ -22,7 +22,12 @@ const PersonForm = ({addPerson, newName, handleNameChange,
   </form>
 );
 
-const Persons = ({display}) => display();
+const Persons = ({persons, newSearch}) => (
+  persons.filter((person) =>
+            person.name.toLowerCase().includes(newSearch.toLowerCase()))
+         .map((person) => 
+    <p key={person.name}>{person.name} {person.number}</p>)
+);
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -51,12 +56,6 @@ const App = () => {
     setNewNum('');
   };
 
-  const display = () =>
-    persons.filter((person) =>
-              person.name.toLowerCase().includes(newSearch.toLowerCase()))
-           .map((person) => 
-      <p key={person.name}>{person.name} {person.number}</p>);
-
   return (
     <div> 
       <h2>Phonebook</h2>
@@ -71,7 +70,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons display={display}/>
+      <Persons persons={persons} newSearch={newSearch}/>
     </div>
   );
 };
