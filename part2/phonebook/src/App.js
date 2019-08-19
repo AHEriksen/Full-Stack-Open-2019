@@ -11,9 +11,12 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     const personObj = { name: newName };
-    setPersons(persons.concat(personObj));
+    if (persons.some(p => p.name === newName))
+      alert(`${newName} is already added to phonebook`);
+    else 
+      setPersons(persons.concat(personObj));
     setNewName('');
-  }
+  };
 
   const display = () =>
     persons.map((persons) => <p key={persons.name}>{persons.name}</p>);
@@ -33,6 +36,6 @@ const App = () => {
       {display()}
     </div>
   );
-}
+};
 
 export default App;
