@@ -1,17 +1,16 @@
-import React from 'react'
+import React from 'react';
 
 const Header = ({text, importance}) => {
     const CustomHeader = `h${importance}`;
-    return <CustomHeader>{text}</CustomHeader>
+    return <CustomHeader>{text}</CustomHeader>;
 }
     
 const Total = ({parts}) => {
     const total = () => parts.reduce((sum, part) => sum += part.exercises, 0);
-    return <b>Total of {total()} exercises</b>
+    return <b>Total of {total()} exercises</b>;
 }
   
-const Part = ({name, exercises}) =>
-    <p>{name} {exercises}</p>
+const Part = ({name, exercises}) => <p>{name} {exercises}</p>
 
 const Content = ({parts}) => {
     const addParts = () => 
@@ -22,7 +21,7 @@ const Content = ({parts}) => {
     <div>
         {addParts()}
     </div>
-    )
+    );
 }
 
 const Course = ({course}) => (
@@ -33,4 +32,4 @@ const Course = ({course}) => (
     </>
 )
 
-export {Course, Header}
+export {Course, Header};

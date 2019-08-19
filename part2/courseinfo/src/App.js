@@ -1,5 +1,5 @@
-import React from 'react'
-import {Course, Header} from './components/Course'
+import React from 'react';
+import {Course, Header} from './components/Course';
 
 const App = () => {
     const course = [
@@ -45,7 +45,7 @@ const App = () => {
                 },
             ]
         } 
-    ]
+    ];
 
     const courses = () => (
         course.map((course) => <Course course={course} key={course.id}/>)
@@ -56,7 +56,7 @@ const App = () => {
             <Header text='Web development curriculum' importance={1}/>
             {courses()}
         </div>
-    )
+    );
 }
 
-export default App
+export default App;
