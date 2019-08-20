@@ -1,24 +1,19 @@
 {
   "persons": [
     {
-      "name": "bbbbbbbb",
-      "number": "2352545436",
-      "id": 3
-    },
-    {
-      "name": "Arto Hellas 040-123456",
-      "number": "",
-      "id": 4
-    },
-    {
-      "name": "test testing",
-      "number": "12345678",
-      "id": 5
-    },
-    {
       "name": "test",
-      "number": "43131231",
+      "number": "42354563",
       "id": 6
+    },
+    {
+      "name": "øæå",
+      "number": "4321",
+      "id": 7
+    },
+    {
+      "name": "testing",
+      "number": "5345345",
+      "id": 8
     }
   ]
 }

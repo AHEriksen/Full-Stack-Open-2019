@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import personService from './services/persons';
+import Notification from './components/notification';
+import './index.css'
 
 const Filter = ({newSearch, handleNewSearch}) => (
   <div>
@@ -39,6 +41,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNum, setNewNum ] = useState('');
   const [ newSearch, setNewSearch ] = useState('');
+  const [ message, setMessage] = useState(null);
 
   useEffect(() => {
     personService
@@ -62,17 +65,33 @@ const App = () => {
                 const newPerson = { ...oldPerson, number: newNum};
                 personService
                   .update(newPerson)
-                  .then(returnedPerson =>
+                  .then(returnedPerson => {
                     setPersons(persons.map(person => person.id !== oldPerson.id
-                        ? person : returnedPerson)));
+                        ? person : returnedPerson));
+                    setMessage(
+                      `Number belonging to ${newPerson.name} changed`
+                      );
+                    /*setTimeout( () => {
+                      setMessage(null)
+                    }, 4000);*/
+                  });
               }
     }
     else 
     {
       personService
         .add(personObj)
-        .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
+          setMessage(
+            `Added ${personObj.name}`
+          );
+          setTimeout( () => {
+            setMessage(null)
+          }, 4000);
+        }); 
     }
+
     setNewName('');
     setNewNum('');
   };
@@ -81,13 +100,21 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personService 
         .remove(person.id)
-        .then(setPersons(persons.filter(p => person.id !== p.id)));
+        .then(id => {
+          setPersons(persons.filter(p => person.id !== p.id))
+          setMessage(`Deleted ${person.name}`);
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000);
+        });
     }
   }
 
   return (
     <div> 
       <h2>Phonebook</h2>
+
+      <Notification message={message}/>
 
       <Filter newSearch={newSearch} handleNewSearch={handleNewSearch}/>
 
