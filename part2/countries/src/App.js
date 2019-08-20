@@ -5,6 +5,12 @@ const App = () => {
   const [newSearch, setNewSearch] = useState('');
   const [countryData, setCountryData] = useState([]);
   const [showCountry, setShowCountry] = useState(new Map());
+  const [weather, setWeather] = useState(new Map());
+
+  // typing out the country name sometimes fired multiple api calls
+  const [apiCallPending, setApiCallPending] = useState(false);
+
+  console.log("render");
 
   useEffect( () => {
     axios
@@ -16,16 +22,17 @@ const App = () => {
          )
   }, []);
 
-  const searchHandler = (event) => setNewSearch(event.target.value);
+  const searchHandler = (event) => {
+    setNewSearch(event.target.value);
+  }
 
   const displayMultiple = (results) => {
     return results.map((country) =>
         <div key={country.name}>{country.name}
           <button onClick={() => toggleCountry(country.name)}>show</button>
           { showCountry.get(country.name) &&
-            <div>{displayCountryHandler(country)}</div>
-          }
-          
+            <div>{displayCountry(country)}</div>
+          } 
         </div>);
   }
 
@@ -35,36 +42,78 @@ const App = () => {
     setShowCountry(copy);
   }
 
-  const displayCountryHandler = (country) => {
-    return (<div>
+  const displayCountry = (country) => {
+    return (
+    <>
       <h1>
         {country.name}
       </h1>
       <p>
-        capital {country.capital}
+        Capital: {country.capital}
       </p>
       <p>
-        population {country.population}
+        Population: {country.population}
       </p>
       <h2>
-        languages
+        Languages
       </h2>
       <ul>
         {country.languages.map((language) => <li key={language.name}>{language.name}</li>)}
       </ul>
       <img src={country.flag} alt={`Flag of ${country.name}`} height="100" />
-    </div>);
+    </>);
   }
+
+  const getWeatherCapital = (capital) => {
+     return axios
+      .get(`https://api.apixu.com/v1/current.json?key=d8d86a1388c84ec685f195349191908&q=${capital}`)
+      .then(response => {
+        const copy = new Map(weather);
+        copy.set(capital, response.data)
+        setWeather(copy);
+        setApiCallPending(false);
+        console.log("weather API call"); 
+        });
+  }
+
+
+  const displaySingleCountry = (country) => {
+    const weatherInfo = () => {
+      const capWeather = weather.get(country.capital);
+      return (
+      <div>
+        <h2>Weather in {country.capital}</h2>
+        <p>temperature: {capWeather.current.temp_c}</p>
+        <img src={capWeather.current.condition.icon} alt={`Weather condition: ${capWeather.current.condition.text}`} />
+        <p><b>Wind:</b>  {capWeather.current.wind_kph} direction {capWeather.current.wind_dir}</p>
+      </div>
+      )
+    }
+    
+    return (
+      <div>
+        {displayCountry(country)}
+        {weather.get(country.capital) ? weatherInfo() : <div></div>}
+      </div>
+    )
+  } 
 
   const displayResults = () => {
     const results = countryData.filter((country) =>
       country.name.toLowerCase().includes(newSearch.toLowerCase()));
-    if (results.length > 10)
+    if (results.length > 10) {
       return <p>Too many matches, specify another filter</p>;
-    else if (results.length > 1)
+    }
+    else if (results.length > 1) {
       return displayMultiple(results);
-    else if (results.length === 1)
-      return displayCountryHandler(results[0]);
+    }
+    else if (results.length === 1) {
+      if (!weather.has(results[0].capital) && !apiCallPending) {
+        setApiCallPending(true);
+        getWeatherCapital(results[0].capital);
+      }
+      return displaySingleCountry(results[0]);
+    }
   }
 
   return (
