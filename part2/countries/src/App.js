@@ -22,8 +22,24 @@ const App = () => {
          )
   }, []);
 
-  const searchHandler = (event) => {
-    setNewSearch(event.target.value);
+  const searchHandler = (event) => setNewSearch(event.target.value);
+
+  const displayResults = () => {
+    const results = countryData.filter((country) =>
+      country.name.toLowerCase().includes(newSearch.toLowerCase()));
+    if (results.length > 10) {
+      return <p>Too many matches, specify another filter</p>;
+    }
+    else if (results.length > 1) {
+      return displayMultiple(results);
+    }
+    else if (results.length === 1) {
+      if (!weather.has(results[0].capital) && !apiCallPending) {
+        setApiCallPending(true);
+        getWeatherCapital(results[0].capital);
+      }
+      return displaySingle(results[0]);
+    }
   }
 
   const displayMultiple = (results) => {
@@ -65,19 +81,17 @@ const App = () => {
   }
 
   const getWeatherCapital = (capital) => {
-     return axios
-      .get(`https://api.apixu.com/v1/current.json?key=d8d86a1388c84ec685f195349191908&q=${capital}`)
-      .then(response => {
-        const copy = new Map(weather);
-        copy.set(capital, response.data)
-        setWeather(copy);
-        setApiCallPending(false);
-        console.log("weather API call"); 
-        });
-  }
+    return axios
+     .get(`https://api.apixu.com/v1/current.json?key=d8d86a1388c84ec685f195349191908&q=${capital}`)
+     .then(response => {
+       const copy = new Map(weather);
+       copy.set(capital, response.data);
+       setWeather(copy);
+       setApiCallPending(false);
+       });
+ }
 
-
-  const displaySingleCountry = (country) => {
+  const displaySingle = (country) => {
     const weatherInfo = () => {
       const capWeather = weather.get(country.capital);
       return (
@@ -93,28 +107,10 @@ const App = () => {
     return (
       <div>
         {displayCountry(country)}
-        {weather.get(country.capital) ? weatherInfo() : <div></div>}
+        {weather.get(country.capital) ? weatherInfo() : <div>(loading weather)</div>}
       </div>
     )
   } 
-
-  const displayResults = () => {
-    const results = countryData.filter((country) =>
-      country.name.toLowerCase().includes(newSearch.toLowerCase()));
-    if (results.length > 10) {
-      return <p>Too many matches, specify another filter</p>;
-    }
-    else if (results.length > 1) {
-      return displayMultiple(results);
-    }
-    else if (results.length === 1) {
-      if (!weather.has(results[0].capital) && !apiCallPending) {
-        setApiCallPending(true);
-        getWeatherCapital(results[0].capital);
-      }
-      return displaySingleCountry(results[0]);
-    }
-  }
 
   return (
     <div>
