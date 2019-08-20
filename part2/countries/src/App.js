@@ -10,8 +10,6 @@ const App = () => {
   // typing out the country name sometimes fired multiple api calls
   const [apiCallPending, setApiCallPending] = useState(false);
 
-  console.log("render");
-
   useEffect( () => {
     axios
          .get('https://restcountries.eu/rest/v2/all')
@@ -43,9 +41,10 @@ const App = () => {
   }
 
   const displayMultiple = (results) => {
+    const text = showCountry.get(country.name) ? 'hide' : 'show';
     return results.map((country) =>
         <div key={country.name}>{country.name}
-          <button onClick={() => toggleCountry(country.name)}>show</button>
+          <button onClick={() => toggleCountry(country.name)}>{text}}</button>
           { showCountry.get(country.name) &&
             <div>{displayCountry(country)}</div>
           } 
