@@ -1,19 +1,14 @@
 {
   "persons": [
     {
-      "name": "test",
-      "number": "42354563",
-      "id": 6
+      "name": "tset",
+      "number": "6546456",
+      "id": 11
     },
     {
-      "name": "øæå",
-      "number": "4321",
-      "id": 7
-    },
-    {
-      "name": "testing",
-      "number": "5345345",
-      "id": 8
+      "name": "bfejjskdf",
+      "number": "532525",
+      "id": 12
     }
   ]
 }

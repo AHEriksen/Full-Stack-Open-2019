@@ -1,40 +1,10 @@
+import './index.css';
 import React, { useState, useEffect } from 'react';
-import personService from './services/persons';
+import personService from './services/person';
 import Notification from './components/notification';
-import './index.css'
-
-const Filter = ({newSearch, handleNewSearch}) => (
-  <div>
-    filter shown with <input value={newSearch} onChange={handleNewSearch}/>
-  </div>
-);
-
-const PersonForm = ({addPerson, newName, handleNameChange, 
-                     newNum, handleNumChange}) => (
-  <form onSubmit={addPerson}>
-    <div>
-      name: <input value={newName} onChange={handleNameChange}/>
-    </div>
-    <div>
-      number: <input value={newNum} onChange={handleNumChange}/>
-    </div>
-    <div>
-      <button type="submit">add</button>
-    </div>
-  </form>
-);
-
-const Persons = ({persons, newSearch, remove}) => (
-  persons
-    .filter((person) =>
-      person.name.toLowerCase().includes(newSearch.toLowerCase()))
-    .map((person) => 
-      <div key={person.id}>
-        {person.name} {person.number}
-        <button onClick={() => remove(person)}>delete</button>
-      </div>
-      )
-);
+import Filter from './components/filter';
+import PersonForm from './components/personform';
+import Persons from './components/persons';
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -71,9 +41,15 @@ const App = () => {
                     setMessage(
                       `Number belonging to ${newPerson.name} changed`
                       );
-                    /*setTimeout( () => {
+                    setTimeout( () => {
                       setMessage(null)
-                    }, 4000);*/
+                    }, 4000);
+                  })
+                  .catch(e => {
+                    setMessage(
+                      `Information of ${newPerson.name} has already been removed from server`
+                    );
+                    setPersons(persons.filter(person => person.id !== newPerson.id));
                   });
               }
     }
