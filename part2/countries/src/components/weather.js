@@ -3,13 +3,11 @@ import axios from 'axios';
 
 const Weather = ({country}) => {
   const [weather, setWeather] = useState('');
-  console.log(weather);
 
   useEffect( () => {
   axios
     .get(`https://api.apixu.com/v1/current.json?key=d8d86a1388c84ec685f195349191908&q=${country.capital}`)
     .then(response => {
-      console.log("api");
       setWeather(response.data);
     });
   }, [country.capital]);

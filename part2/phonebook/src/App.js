@@ -49,6 +49,9 @@ const App = () => {
                     setMessage(
                       `Information of ${newPerson.name} has already been removed from server`
                     );
+                    setTimeout( () => {
+                      setMessage(null)
+                    }, 4000);
                     setPersons(persons.filter(person => person.id !== newPerson.id));
                   });
               }
