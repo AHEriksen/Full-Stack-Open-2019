@@ -39,7 +39,10 @@ const App = () => {
                     setPersons(persons.map(person => person.id !== oldPerson.id
                         ? person : returnedPerson));
                     setMessage(
-                      `Number belonging to ${newPerson.name} changed`
+                      {
+                      text: `Number belonging to ${newPerson.name} changed`,
+                      success: true
+                      }
                       );
                     setTimeout( () => {
                       setMessage(null)
@@ -47,7 +50,10 @@ const App = () => {
                   })
                   .catch(e => {
                     setMessage(
-                      `Information of ${newPerson.name} has already been removed from server`
+                      {
+                      text: `Information of ${newPerson.name} has already been removed from server`,
+                      success: false
+                      }
                     );
                     setTimeout( () => {
                       setMessage(null)
@@ -63,7 +69,10 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson));
           setMessage(
-            `Added ${personObj.name}`
+            {
+            text: `Added ${personObj.name}`,
+            success: true
+            }
           );
           setTimeout( () => {
             setMessage(null)
@@ -81,7 +90,7 @@ const App = () => {
         .remove(person.id)
         .then(id => {
           setPersons(persons.filter(p => person.id !== p.id))
-          setMessage(`Deleted ${person.name}`);
+          setMessage({text: `Deleted ${person.name}`, success: true});
           setTimeout(() => {
             setMessage(null)
           }, 4000);
