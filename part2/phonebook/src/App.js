@@ -77,7 +77,17 @@ const App = () => {
           setTimeout( () => {
             setMessage(null)
           }, 4000);
-        }); 
+        }) 
+        .catch(e => {
+          setMessage(
+            {
+            text: e.response.data.error,
+            success: false
+            });
+          setTimeout( () => {
+            setMessage(null)
+          }, 4000);
+        })
     }
 
     setNewName('');
