@@ -49,11 +49,11 @@ const App = () => {
                     }, 4000);
                   })
                   .catch(e => {
-                    if (e.response.data.name === 'ValidationError')
+                    if (e.response.data.error.name === 'ValidationError')
                     {
                       setMessage(
                         {
-                          text: e.response.data.error,
+                          text: e.response.data.error.message,
                           success: false
                         }
                       );
@@ -92,7 +92,7 @@ const App = () => {
         .catch(e => {
           setMessage(
             {
-            text: e.response.data.error,
+            text: e.response.data.error.message,
             success: false
             });
           setTimeout( () => {
