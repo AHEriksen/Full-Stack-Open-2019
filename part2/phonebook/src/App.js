@@ -49,16 +49,27 @@ const App = () => {
                     }, 4000);
                   })
                   .catch(e => {
-                    setMessage(
-                      {
-                      text: `Information of ${newPerson.name} has already been removed from server`,
-                      success: false
-                      }
-                    );
+                    if (e.response.data.name === 'ValidationError')
+                    {
+                      setMessage(
+                        {
+                          text: e.response.data.error,
+                          success: false
+                        }
+                      );
+                    }
+                    else {
+                      setMessage(
+                        {
+                        text: `Information of ${newPerson.name} has already been removed from server`,
+                        success: false
+                        }
+                      );
+                      setPersons(persons.filter(person => person.id !== newPerson.id));
+                    }
                     setTimeout( () => {
                       setMessage(null)
                     }, 4000);
-                    setPersons(persons.filter(person => person.id !== newPerson.id));
                   });
               }
     }
