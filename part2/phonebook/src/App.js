@@ -49,7 +49,7 @@ const App = () => {
                     }, 4000);
                   })
                   .catch(e => {
-                    if (e.response.data.error.name === 'ValidationError')
+                    if (e.response.data.error !== undefined && e.response.data.error.name === 'ValidationError')
                     {
                       setMessage(
                         {
