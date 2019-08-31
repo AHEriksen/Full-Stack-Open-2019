@@ -41,6 +41,25 @@ describe('favorite blog', () => {
   });
 });
 
+describe('author with most blogs', () => {
+  test('from a list of one', () => {
+    const result = listHelper.mostBlogs(blogs.slice(1,2));
+    const answer = { author: 'Edsger W. Dijkstra', blogs: 1 };
+    expect(result).toEqual(answer);
+  });
+
+  test('from a list of many blogs', () => {
+    const result = listHelper.mostBlogs(blogs);
+    const answer = { author: 'Robert C. Martin', blogs: 3 }
+    expect(result).toEqual(answer);
+  });
+
+  test('from an empty list of blogs', () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toEqual(null);
+  });
+});
+
 const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
