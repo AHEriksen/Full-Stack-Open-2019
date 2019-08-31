@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint",
     "start": "node index.js",
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\"",
+    "test": "jest --verbose",
     "watch": "nodemon index.js"
   },
   "repository": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/AHEriksen/Full-Stack-Open-2019#readme",
   "devDependencies": {
     "eslint": "^6.2.2",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1"
   },
   "dependencies": {
@@ -28,5 +29,8 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "mongoose": "^5.6.11"
-  }
+  },
+  "jest": {
+    "testEnvironment": "node"
+}
 }
