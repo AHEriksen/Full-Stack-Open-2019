@@ -24,6 +24,23 @@ describe('total likes', () => {
   });
 });
 
+describe('favorite blog', () => {
+  test('amongst many is correct', () => {
+    const result = listHelper.favoriteBlog(blogs);
+    expect(result).toEqual(blogs[2]);
+  });
+
+  test('from a list of only one blog is that blog', () => {
+    const result = listHelper.favoriteBlog(blogs.slice(1,2));
+    expect(result).toEqual(blogs[1]);
+  });
+
+  test('from a list of zero blogs is null', () => {
+    const result = listHelper.favoriteBlog([]);
+    expect(result).toEqual(null);
+  });
+});
+
 const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
