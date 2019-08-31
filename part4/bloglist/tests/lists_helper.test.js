@@ -50,13 +50,32 @@ describe('author with most blogs', () => {
 
   test('from a list of many blogs', () => {
     const result = listHelper.mostBlogs(blogs);
-    const answer = { author: 'Robert C. Martin', blogs: 3 }
+    const answer = { author: 'Robert C. Martin', blogs: 3 };
     expect(result).toEqual(answer);
   });
 
   test('from an empty list of blogs', () => {
     const result = listHelper.mostBlogs([]);
     expect(result).toEqual(null);
+  });
+});
+
+describe('author with most likes', () => {
+  test('from a list of many blogs', () => {
+    const result = listHelper.mostLikes(blogs);
+    const answer = { author: 'Edsger W. Dijkstra', likes: 17 };
+    expect(result).toEqual(answer);
+  });
+
+  test('from an empty list of blogs', () => {
+    const result = listHelper.mostLikes([]);
+    expect(result).toEqual(null);
+  });
+
+  test('from a list of one blog', () => {
+    const result = listHelper.mostLikes(blogs.slice(3,4));
+    const answer = { author: 'Robert C. Martin', likes: 10 };
+    expect(result).toEqual(answer);
   });
 });
 
