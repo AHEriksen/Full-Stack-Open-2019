@@ -62,6 +62,17 @@ test('missing likes property gives default value of 0', async () => {
   expect(blog[0].likes).toBe(0);
 });
 
+test('bad request if title and url are missing from POST request', async () => {
+  const blogMissing = {
+    author: 'testperson',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(blogMissing)
+    .expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
