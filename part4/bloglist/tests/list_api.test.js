@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const helper = require('./test_helper');
 
 const api = supertest(app);
@@ -75,4 +76,55 @@ test('bad request if title and url are missing from POST request', async () => {
 
 afterAll(() => {
   mongoose.connection.close();
+});
+
+describe('when there is initially on user in DB', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+    const user = new User({ username: 'root', password: 'pw' });
+    await user.save();
+  });
+
+  test('creation succeeds with unique username', async () => {
+    const initialUsers = await helper.usersInDB();
+
+    const newUser = {
+      username: 'bj',
+      name: 'bkljdkl jkjfdlsf',
+      password: 'pw123'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsers = await helper.usersInDB();
+    expect(finalUsers.length).toBe(initialUsers.length + 1);
+
+    const usernames = finalUsers.map(fu => fu.username);
+    expect(usernames).toContain(newUser.username);
+  });
+
+  test('creation fails with dupe username', async () => {
+    const initialUsers = await helper.usersInDB();
+
+    const newUser = {
+      username: 'root',
+      name: 'rootman',
+      password: 'namtoor'
+    };
+
+    const res = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(res.body.error).toContain('`username` to be unique');
+    const finalUsers = await helper.usersInDB();
+    expect(finalUsers.length).toBe(initialUsers.length);
+  });
+
 });
