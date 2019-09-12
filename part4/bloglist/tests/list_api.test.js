@@ -78,7 +78,7 @@ afterAll(() => {
   mongoose.connection.close();
 });
 
-describe('when there is initially on user in DB', () => {
+describe('when there is initially one user in DB', () => {
   beforeEach(async () => {
     await User.deleteMany({});
     const user = new User({ username: 'root', password: 'pw' });
@@ -89,7 +89,7 @@ describe('when there is initially on user in DB', () => {
     const initialUsers = await helper.usersInDB();
 
     const newUser = {
-      username: 'bj',
+      username: 'bj123',
       name: 'bkljdkl jkjfdlsf',
       password: 'pw123'
     };
@@ -123,6 +123,46 @@ describe('when there is initially on user in DB', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(res.body.error).toContain('`username` to be unique');
+    const finalUsers = await helper.usersInDB();
+    expect(finalUsers.length).toBe(initialUsers.length);
+  });
+
+  test('creation fails with username with less than 3 characters', async () => {
+    const initialUsers = await helper.usersInDB();
+
+    const newUser = {
+      username: 'ab',
+      name: 'an br',
+      password: 'anbr'
+    };
+
+    const res = await api 
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(res.body.error).toContain('shorter than the minimum allowed length');
+    const finalUsers = await helper.usersInDB();
+    expect(finalUsers.length).toBe(initialUsers.length);
+  });
+
+  test('creation fails with password with less than 3 characters', async () => {
+    const initialUsers = await helper.usersInDB();
+
+    const newUser = {
+      username: 'ab123',
+      name: 'jsdiofjsd',
+      password: 'ab'
+    };
+
+    const res = await api 
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(res.body.error).toContain('password must be at least');
     const finalUsers = await helper.usersInDB();
     expect(finalUsers.length).toBe(initialUsers.length);
   });
