@@ -9,7 +9,7 @@ usersRouter.post('/', async (request, response, next) => {
       return response.status(400).send({
         error: 'password must be at least 3 characters long'
       });
-      
+
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
@@ -29,7 +29,9 @@ usersRouter.post('/', async (request, response, next) => {
 
 usersRouter.get('/', async (request, response, next) => {
   try {
-    const users = await User.find({});
+    const users = await User
+      .find({})
+      .populate('blogs', { url: 1, title: 1, author: 1 });
     response.json(users.map(u => u.toJSON()));
   }
   catch (exception) {

@@ -136,7 +136,7 @@ describe('when there is initially one user in DB', () => {
       password: 'anbr'
     };
 
-    const res = await api 
+    const res = await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
@@ -156,7 +156,7 @@ describe('when there is initially one user in DB', () => {
       password: 'ab'
     };
 
-    const res = await api 
+    const res = await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
