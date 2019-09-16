@@ -1,9 +1,10 @@
 post http://localhost:3001/api/blogs
 Content-Type: application/json 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaWQiOiI1ZDdhMjU0NjRjNzM5NzE2YmNmMDM2ZWQiLCJpYXQiOjE1Njg2NDUyOTR9.EeNxDrfAzz_rSn9eNAtbnfeoBhWBiN6y-1zlvGuINdc
 
 {
-  "title": "testi",
-  "author": "testerfsdfs",
+  "title": "12345",
+  "author": "tester",
   "url": "https://www.twitter.com",
-  "likes": 5
+  "likes": 7
 }
