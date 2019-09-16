@@ -81,7 +81,7 @@ afterAll(() => {
 describe('when there is initially one user in DB', () => {
   beforeEach(async () => {
     await User.deleteMany({});
-    const user = new User({ username: 'root', password: 'pw' });
+    const user = new User({ username: 'root', password: 'pw12' });
     await user.save();
   });
 
@@ -166,5 +166,93 @@ describe('when there is initially one user in DB', () => {
     const finalUsers = await helper.usersInDB();
     expect(finalUsers.length).toBe(initialUsers.length);
   });
+});
 
+describe('when there are initially two users in DB', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+    const user1 = { username: 'root', name: 'testroot', password: 'pwww' };
+    const user2 = { username: 'toot', name: 'testtoot', password: 'pwww' };
+    await api
+      .post('/api/users')
+      .send(user1);
+    await api
+      .post('/api/users')
+      .send(user2);
+  });
+
+  test('a user can delete his own blogs', async () => {
+    const userCred = {
+      username: 'root',
+      password: 'pwww'
+    };
+
+    const user = await api
+      .post('/api/login')
+      .send(userCred)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const newBlog = {
+      title: 'test123',
+      author: 'test',
+      url: 'https://www.twitter.com',
+      likes: 7
+    };
+
+    const res = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `bearer ${user.body.token}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    await api
+      .delete(`/api/blogs/${res.body.id}`)
+      .set('Authorization', `bearer ${user.body.token}`)
+      .expect(204);
+  });
+
+  test('a user cannot delete another user\'s blogs', async () => {
+    const userCred1 = {
+      username: 'root',
+      password: 'pwww'
+    };
+
+    const userCred2 = {
+      username: 'toot',
+      password: 'pwww'
+    };
+
+    const user1 = await api
+      .post('/api/login')
+      .send(userCred1)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const newBlog = {
+      title: 'test123',
+      author: 'test',
+      url: 'https://www.twitter.com',
+      likes: 7
+    };
+
+    const addedBlog = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization', `bearer ${user1.body.token}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const user2 = await api
+      .post('/api/login')
+      .send(userCred2)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    await api
+      .delete(`/api/blogs/${addedBlog.body.id}`)
+      .set('Authorization', `bearer ${user2.body.token}`)
+      .expect(403);
+  });
 });

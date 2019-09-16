@@ -1,10 +1,10 @@
 post http://localhost:3001/api/blogs
 Content-Type: application/json 
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaWQiOiI1ZDdhMjU0NjRjNzM5NzE2YmNmMDM2ZWQiLCJpYXQiOjE1Njg2NDk0MjJ9.bMbzfLMiQXIo4L2BwDJhLZSQKGEeYNa1Wt0yXQoDUWI
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpZCI6IjVkN2ZiOTExNGRlNjJhM2ZlMDBmODJhMyIsImlhdCI6MTU2ODY1MTc3OH0.3vcMcBQH-TOZfLkxlv9fUsMyrpb5oaMKdtQtHkKznik
 
 {
-  "title": "123",
-  "author": "321",
+  "title": "testblog",
+  "author": "again",
   "url": "https://www.twitter.com",
   "likes": 7
 }
