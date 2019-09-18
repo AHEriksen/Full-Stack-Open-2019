@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 
-const NewBlog = () => {
+const NewBlog = ({ setMessage }) => {
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
 
   const setProperty = (property, value) => {
@@ -15,6 +15,9 @@ const NewBlog = () => {
 
     try {
       await blogService.create(newBlog);
+      const msg = { text: `a new blog ${newBlog.title} by ${newBlog.author} added`, success: true };
+      setMessage(msg);
+      setTimeout( () => { setMessage(null); }, 5000);
       setNewBlog({ title: '', author: '', url: '' });
     }
     catch (exception) {
