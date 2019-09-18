@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import loginService from './services/login';
 import blogService from './services/blogs';
 import Blog from './components/Blog';
+import NewBlog from './components/NewBlog';
 
-function App() {
+const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -13,6 +14,7 @@ function App() {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
+      blogService.setToken(user.token);
       setUser(user);
     }
   }, []);
@@ -40,10 +42,10 @@ function App() {
         });
 
       window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)  
+        'loggedBlogappUser', JSON.stringify(user)
       );
-      console.log(window.localStorage.getItem('loggedBlogappUser'));
 
+      blogService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -105,11 +107,13 @@ function App() {
         <div>
           {`${user.name} logged in`}
           <button onClick={handleLogout}>logout</button>
+          <h2>create new</h2>
+          <NewBlog />
         </div>
         {blogList()}
       </div>
     );
   }
-}
+};
 
 export default App;
