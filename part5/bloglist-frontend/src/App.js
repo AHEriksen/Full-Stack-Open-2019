@@ -71,13 +71,13 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser');
   };
 
-  const blogList = () => (
-    <>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </>
-  );
+  const blogList = () => {
+    const sortedBlogs = [ ...blogs ];
+    sortedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
+    return (<>
+      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+    </>);
+  };
 
   const loginForm = () => (
     <form onSubmit={ handleLogin }>
