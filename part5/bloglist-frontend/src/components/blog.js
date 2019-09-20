@@ -60,7 +60,7 @@ const Blog = ({ blog, setMessage, username }) => {
       };
       setMessage(msg);
       setTimeout(() => { setMessage(null); }, 5000);
-    };
+    }
   };
 
   return (

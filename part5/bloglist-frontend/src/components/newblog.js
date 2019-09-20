@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
+import PropTypes from 'prop-types';
 
 const NewBlog = ({ setMessage, blogFormRef }) => {
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
@@ -56,6 +57,10 @@ const NewBlog = ({ setMessage, blogFormRef }) => {
 
     </form>
   );
+};
+
+NewBlog.propTypes = {
+  setMessage: PropTypes.func.isRequired
 };
 
 export default NewBlog;
