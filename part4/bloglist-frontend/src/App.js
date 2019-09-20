@@ -5,6 +5,7 @@ import blogService from './services/blogs';
 import Blog from './components/blog';
 import NewBlog from './components/newblog';
 import Notification from './components/notification';
+import Togglable from './components/togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -12,6 +13,8 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const blogFormRef = React.createRef();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -118,7 +121,9 @@ const App = () => {
           {`${user.name} logged in`}
           <button onClick={handleLogout}>logout</button>
           <h2>create new</h2>
-          <NewBlog setMessage={setMessage}/>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <NewBlog setMessage={setMessage} blogFormRef={blogFormRef}/>
+          </Togglable>
         </div>
         {blogList()}
       </div>

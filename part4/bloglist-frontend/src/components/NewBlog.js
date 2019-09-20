@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 
-const NewBlog = ({ setMessage }) => {
+const NewBlog = ({ setMessage, blogFormRef }) => {
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
 
   const setProperty = (property, value) => {
@@ -15,6 +15,7 @@ const NewBlog = ({ setMessage }) => {
 
     try {
       await blogService.create(newBlog);
+      blogFormRef.current.toggleVisibility();
       const msg = { text: `a new blog ${newBlog.title} by ${newBlog.author} added`, success: true };
       setMessage(msg);
       setTimeout( () => { setMessage(null); }, 5000);
