@@ -2,10 +2,10 @@ import './index.css';
 import React, { useState, useEffect } from 'react';
 import loginService from './services/login';
 import blogService from './services/blogs';
-import Blog from './components/blog';
-import NewBlog from './components/newblog';
-import Notification from './components/notification';
-import Togglable from './components/togglable';
+import Blog from './components/Blog';
+import NewBlog from './components/NewBlog';
+import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
