@@ -18,7 +18,7 @@ test('Component renders title, author and amount of likes', () => {
 
   expect(component.container).toHaveTextContent('testblog');
   expect(component.container).toHaveTextContent('testauthor');
-  expect(component.container).toHaveTextContent(10);
+  expect(component.container).toHaveTextContent('10');
 });
 
 test('Like button pressed twice => event handler called twice', () => {

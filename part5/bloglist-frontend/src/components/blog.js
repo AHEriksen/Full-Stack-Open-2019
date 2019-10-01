@@ -34,12 +34,12 @@ const Blog = ({ blog, setMessage, username }) => {
   };
 
   const standardDisplay = () => (
-    <div onClick={handleDisplay}>{blog.title} {blog.author}</div>
+    <div onClick={handleDisplay} className='toggleOn'>{blog.title} {blog.author}</div>
   );
 
   const extraDisplay = () => (
     <>
-      <div onClick={handleDisplay}>{blog.title} {blog.author}</div>
+      <div onClick={handleDisplay} className='toggleOff'>{blog.title} {blog.author}</div>
       <a href={blog.url}>{blog.url}</a>
       <div>{blog.likes} likes <button onClick={incrementLikes}>like</button></div>
       <div>{`added by ${blog.user.name}`}</div>
