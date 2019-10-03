@@ -64,7 +64,7 @@ const Blog = ({ blog, setMessage, username }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div>
         {extraInfo ? extraDisplay() : standardDisplay()}
       </div>
