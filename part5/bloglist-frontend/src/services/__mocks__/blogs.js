@@ -1,6 +1,6 @@
 const blogs = [
   {
-    id: 'blogid1',
+    id: '5d84ae92a891872fd475342d',
     title: 'blogtitle1',
     author: 'blogauthor1',
     url: 'www.blog1.com',
@@ -29,4 +29,6 @@ const getAll = () => {
   return Promise.resolve(blogs);
 };
 
-export default { getAll };
+const setToken = () => {};
+
+export default { getAll, setToken };
