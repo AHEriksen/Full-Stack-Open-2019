@@ -1,5 +1,6 @@
 import './index.css';
 import React, { useState, useEffect } from 'react';
+import { useField } from './hooks';
 import loginService from './services/login';
 import blogService from './services/blogs';
 import Blog from './components/Blog';
@@ -9,8 +10,9 @@ import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  //const [username, setUsername] = useState('');
+  const username = useField('text');
+  const password = useField('text');
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
 
@@ -44,7 +46,7 @@ const App = () => {
     try {
       const user = await loginService.login(
         {
-          username, password,
+          username: username.value, password: password.value,
         });
 
       window.localStorage.setItem(
@@ -53,8 +55,8 @@ const App = () => {
 
       blogService.setToken(user.token);
       setUser(user);
-      setUsername('');
-      setPassword('');
+      username.reset();
+      password.reset();
     }
     catch (exception) {
       const msg = {
@@ -83,21 +85,11 @@ const App = () => {
     <form onSubmit={ handleLogin }>
       <div>
         username
-        <input
-          type='text'
-          value={username}
-          name='Username'
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <input {...username}/>
       </div>
       <div>
         password
-        <input
-          type='text'
-          value={password}
-          name='Password'
-          onChange={({ target }) => setPassword(target.value)}
-        />
+        <input {...password}/>
       </div>
       <button type="submit">login</button>
     </form>
