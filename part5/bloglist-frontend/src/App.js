@@ -46,8 +46,9 @@ const App = () => {
     try {
       const user = await loginService.login(
         {
-          username: username.value, password: password.value,
+          username: username.input.value, password: password.input.value,
         });
+
 
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
@@ -85,11 +86,11 @@ const App = () => {
     <form onSubmit={ handleLogin }>
       <div>
         username
-        <input {...username}/>
+        <input {...username.input}/>
       </div>
       <div>
         password
-        <input {...password}/>
+        <input {...password.input}/>
       </div>
       <button type="submit">login</button>
     </form>

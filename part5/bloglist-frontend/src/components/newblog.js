@@ -11,12 +11,12 @@ const NewBlog = ({ setMessage, blogFormRef }) => {
   const handleCreation = async (event) => {
     event.preventDefault();
 
-    const newBlog = { title: title.value, author: author.value, url: url.value };
+    const newBlog = { title: title.input.value, author: author.input.value, url: url.input.value };
 
     try {
       await blogService.create(newBlog);
       blogFormRef.current.toggleVisibility();
-      const msg = { text: `a new blog ${title.value} by ${author.value} added`, success: true };
+      const msg = { text: `a new blog ${title.input.value} by ${author.input.value} added`, success: true };
       setMessage(msg);
       setTimeout( () => { setMessage(null); }, 5000);
       title.reset(); author.reset(); url.reset();
@@ -29,13 +29,13 @@ const NewBlog = ({ setMessage, blogFormRef }) => {
   return (
     <form onSubmit={handleCreation}>
       <div>
-        title <input {...title}/>
+        title <input {...title.input}/>
       </div>
       <div>
-        author <input {...author}/>
+        author <input {...author.input}/>
       </div>
       <div>
-        url <input {...url}/>
+        url <input {...url.input}/>
       </div>
       <button type="submit">create</button>
 
