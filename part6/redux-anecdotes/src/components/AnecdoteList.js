@@ -42,8 +42,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   addVote,
-  setNotification,
-  removeNotification,
+  setNotification
 };
 
 const connectedAnecdoteList = connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);

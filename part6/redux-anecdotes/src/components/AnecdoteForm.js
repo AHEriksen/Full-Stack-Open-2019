@@ -24,8 +24,7 @@ const AnecdoteForm = (props) => {
 
 const mapDispatchToProps = {
   createAnecdote,
-  setNotification,
-  removeNotification
+  setNotification
 };
 
 const connectedAnecdoteForm = connect(null, mapDispatchToProps)(AnecdoteForm);
