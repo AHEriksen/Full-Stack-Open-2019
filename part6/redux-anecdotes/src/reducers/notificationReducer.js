@@ -10,7 +10,7 @@ export const setNotification = (message, seconds) => {
   };
 };
 
-export const removeNotification = () => {
+const removeNotification = () => {
   return { type: 'REMOVE_NOTIFICATION' };
 };
 

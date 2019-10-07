@@ -1,6 +1,6 @@
 import React from 'react';
 import { addVote } from '../reducers/anecdoteReducer';
-import { setNotification, removeNotification } from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
 import { connect } from 'react-redux';
 
 const AnecdoteList = (props) => {
