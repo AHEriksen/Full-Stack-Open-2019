@@ -8,8 +8,7 @@ const AnecdoteList = (props) => {
 
   const vote = (anecdote) => {
     props.addVote(anecdote);
-    props.setNotification(`you voted "${anecdote.content}"`);
-    setTimeout(() => props.removeNotification(), 5000);
+    props.setNotification(`you voted "${anecdote.content}"`, 5);
   };
 
   return (

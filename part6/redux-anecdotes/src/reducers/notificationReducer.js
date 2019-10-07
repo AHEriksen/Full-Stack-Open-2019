@@ -1,10 +1,12 @@
 const initialState = null;
 
-export const setNotification = (message) => {
-  console.log(message);
-  return {
-    type: 'SET_NOTIFICATION',
-    notification: message
+export const setNotification = (message, seconds) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification: message
+    });
+    setTimeout(() => dispatch(removeNotification()), 1000 * seconds);
   };
 };
 
