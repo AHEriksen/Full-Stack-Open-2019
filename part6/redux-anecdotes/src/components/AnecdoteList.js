@@ -2,7 +2,7 @@ import { addVote } from '../reducers/anecdoteReducer';
 import React from 'react';
 
 const AnecdoteList = ({ store }) => {
-  const anecdotes = store.getState();
+  const anecdotes = store.getState().anecdotes;
 
   const vote = (id) => {
     store.dispatch(addVote(id));
