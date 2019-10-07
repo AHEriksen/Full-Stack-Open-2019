@@ -1,4 +1,4 @@
-const initialState = 'notifications';
+const initialState = null;
 
 export const setNotification = (message) => {
   console.log(message);
