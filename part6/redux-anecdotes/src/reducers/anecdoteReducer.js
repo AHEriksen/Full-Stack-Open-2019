@@ -1,9 +1,13 @@
 import anecdoteService from '../services/anecdotes';
 
-export const addVote = (id) => {
-  return {
-    type: 'ADD_VOTE',
-    data: { id }
+export const addVote = (anecdote) => {
+  return async (dispatch) => {
+    const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
+    await anecdoteService.update(updatedAnecdote);
+    dispatch({
+      type: 'ADD_VOTE',
+      data: updatedAnecdote
+    });
   };
 };
 
@@ -33,10 +37,8 @@ const reducer = (state = [], action) => {
     case 'INIT_ANECDOTES':
       return action.data;
     case 'ADD_VOTE': {
-      const id = action.data.id;
-      const anecdote = state.find((anecdote) => anecdote.id === id);
-      const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
-      return state.map(anecdote => anecdote.id === id ? updatedAnecdote : anecdote);
+      const updatedAnecdote = action.data;
+      return state.map(anecdote => anecdote.id === updatedAnecdote.id ? updatedAnecdote : anecdote);
     }
     case 'NEW_ANECDOTE':
       return state.concat(action.data);
