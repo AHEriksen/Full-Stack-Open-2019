@@ -4,21 +4,18 @@ import { setNotification, removeNotification } from '../reducers/notificationRed
 import { connect } from 'react-redux';
 
 const AnecdoteList = (props) => {
-  const anecdotes = props.anecdotes;
-  const filter = props.filter;
+  const anecdotes = props.anecdotesToShow;
 
   const vote = (id) => {
     props.addVote(id);
     const anecdote = anecdotes.find((anecdote) => anecdote.id === id);
     props.setNotification(`you voted "${anecdote.content}"`);
-    clearTimeout();
     setTimeout(() => props.removeNotification(), 5000);
   };
 
   return (
     <>
       {anecdotes
-        .filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
         .sort((anecdote1, anecdote2) => anecdote2.votes - anecdote1.votes)
         .map(anecdote =>
           <div key={anecdote.id}>
@@ -35,17 +32,20 @@ const AnecdoteList = (props) => {
   );
 };
 
+const visibleAnecdotes = ({ anecdotes, filter }) => {
+  return anecdotes.filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()));
+};
+
 const mapStateToProps = (state) => {
   return {
-    anecdotes: state.anecdotes,
-    filter: state.filter
+    anecdotesToShow: visibleAnecdotes(state)
   };
 };
 
 const mapDispatchToProps = {
   addVote,
   setNotification,
-  removeNotification
+  removeNotification,
 };
 
 const connectedAnecdoteList = connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);
