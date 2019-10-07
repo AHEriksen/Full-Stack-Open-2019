@@ -1,4 +1,5 @@
 import { addVote } from '../reducers/anecdoteReducer';
+import { setNotification, removeNotification } from '../reducers/notificationReducer';
 import React from 'react';
 
 const AnecdoteList = ({ store }) => {
@@ -6,6 +7,9 @@ const AnecdoteList = ({ store }) => {
 
   const vote = (id) => {
     store.dispatch(addVote(id));
+    const anecdote = anecdotes.find((anecdote) => anecdote.id === id);
+    store.dispatch(setNotification(`you voted "${anecdote.content}"`));
+    setTimeout(() => store.dispatch(removeNotification()), 5000);
   };
 
   return (
