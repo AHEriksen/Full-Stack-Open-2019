@@ -7,8 +7,8 @@ import Filter from './components/Filter';
 const App = () => {
   return (
     <div>
-      <h2>Anecdotes</h2>
-      {/*<Notification store={store} />*/}
+      <h1>Programming anecdotes</h1>
+      <Notification />
       <Filter />
       <AnecdoteForm />
       <AnecdoteList />
