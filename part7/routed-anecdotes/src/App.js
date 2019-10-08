@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
-  Route, Link
+  Route, Link, withRouter
 } from 'react-router-dom';
 
 const Menu = () => {
@@ -22,7 +22,7 @@ const Anecdote = ({ anecdote }) => {
     <div>
       <h2>{anecdote.content} by {anecdote.author}</h2>
       <p>has {anecdote.votes} votes</p>
-      <p>for more info see {anecdote.url}</p>
+      <p>for more info see <a href={anecdote.info}>{anecdote.info}</a></p>
     </div>
   );
 };
@@ -47,7 +47,7 @@ const About = () => (
     <em>An anecdote is a brief, revealing account of an individual person or an incident.
       Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself,
       such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative.
-      An anecdote is "a story with a point."</em>
+      An anecdote is &apos;a story with a point.&apos;</em>
 
     <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
   </div>
@@ -61,7 +61,7 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = (props) => {
+let CreateNew = (props) => {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
@@ -75,6 +75,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     });
+    props.history.push('/');
   };
 
   return (
@@ -99,6 +100,8 @@ const CreateNew = (props) => {
   );
 };
 
+CreateNew = withRouter(CreateNew);
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -122,6 +125,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`a new anecdote '${anecdote.content}' created`);
+    setTimeout(() => setNotification(null), 10000);
   };
 
   const anecdoteById = (id) =>
@@ -143,14 +148,15 @@ const App = () => {
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
+        { notification }
         <Route exact path='/' render={() =>
           <AnecdoteList anecdotes={anecdotes} />} />
         <Route exact path='/about' render={() =>
           <About />} />
         <Route exact path='/create' render={() =>
           <CreateNew addNew={addNew} />} />
-        <Route exact path='/anecdotes/:id' render={({ match }) => 
-          <Anecdote anecdote={anecdoteById(match.params.id)}/>} /> 
+        <Route exact path='/anecdotes/:id' render={({ match }) =>
+          <Anecdote anecdote={anecdoteById(match.params.id)}/>} />
       </Router>
       <Footer />
     </div>
