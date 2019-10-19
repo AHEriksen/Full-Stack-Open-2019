@@ -13,7 +13,6 @@ export const initializeBlogs = () => {
 export const addVote = (blog) => {
   return async (dispatch) => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
-    console.log(blog.votes, updatedBlog.likes);
     blogService.update(updatedBlog);
     dispatch({
       type: 'ADD_VOTE',

@@ -1,5 +1,5 @@
 import './index.css';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useField } from './hooks';
 import loginService from './services/login';
@@ -10,13 +10,14 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
+import { setUser, resetUser } from './reducers/userReducer';
 
 const App = (props) => {
   const username = useField('text');
   const password = useField('text');
-  const [user, setUser] = useState(null);
   const blogFormRef = React.createRef();
 
+  const { setUser } = props;
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
     if (loggedUserJSON) {
@@ -24,7 +25,7 @@ const App = (props) => {
       blogService.setToken(user.token);
       setUser(user);
     }
-  }, []);
+  }, [setUser]);
 
   const { initializeBlogs } = props;
   useEffect(() => {
@@ -46,7 +47,7 @@ const App = (props) => {
       );
 
       blogService.setToken(user.token);
-      setUser(user);
+      props.setUser(user);
       username.reset();
       password.reset();
     }
@@ -60,15 +61,15 @@ const App = (props) => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    props.resetUser();
     window.localStorage.removeItem('loggedBlogAppUser');
   };
 
   const blogList = () => {
-    const sortedBlogs = [ ...props.blogs ];
-    sortedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
+    const sortedBlogs = [...props.blogs]
+      .sort((blog1, blog2) => blog2.likes - blog1.likes);
     return (<>
-      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} username={user.username}/>)}
+      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} username={props.user.username}/>)}
     </>);
   };
 
@@ -86,7 +87,8 @@ const App = (props) => {
     </form>
   );
 
-  if (user === null) {
+  console.log(props.user);
+  if (props.user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
@@ -101,7 +103,7 @@ const App = (props) => {
         <h2>blogs</h2>
         <Notification/>
         <div>
-          {`${user.name} logged in`}
+          {`${props.user.name} logged in`}
           <button onClick={handleLogout}>logout</button>
           <h2>create new</h2>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
@@ -116,13 +118,16 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    blogs: state.blogs
+    blogs: state.blogs,
+    user: state.user
   };
 };
 
 const mapDispatchToProps = {
   setNotification,
-  initializeBlogs
+  initializeBlogs,
+  setUser,
+  resetUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
