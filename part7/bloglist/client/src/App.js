@@ -9,14 +9,12 @@ import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import { setNotification } from './reducers/notificationReducer';
+import { initializeBlogs } from './reducers/blogReducer';
 
 const App = (props) => {
-  const [blogs, setBlogs] = useState([]);
-  //const [username, setUsername] = useState('');
   const username = useField('text');
   const password = useField('text');
   const [user, setUser] = useState(null);
-
   const blogFormRef = React.createRef();
 
   useEffect(() => {
@@ -28,18 +26,10 @@ const App = (props) => {
     }
   }, []);
 
+  const { initializeBlogs } = props;
   useEffect(() => {
-    const fetchAndSetBlogs = async () => {
-      try {
-        const data = await blogService.getAll();
-        setBlogs(data);
-      }
-      catch (exception) {
-        console.log(exception);
-      }
-    };
-    fetchAndSetBlogs();
-  }, []);
+    initializeBlogs();
+  }, [initializeBlogs]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -75,7 +65,7 @@ const App = (props) => {
   };
 
   const blogList = () => {
-    const sortedBlogs = [ ...blogs ];
+    const sortedBlogs = [ ...props.blogs ];
     sortedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
     return (<>
       {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} username={user.username}/>)}
@@ -124,4 +114,15 @@ const App = (props) => {
   }
 };
 
-export default connect(null, { setNotification } )(App);
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  };
+};
+
+const mapDispatchToProps = {
+  setNotification,
+  initializeBlogs
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

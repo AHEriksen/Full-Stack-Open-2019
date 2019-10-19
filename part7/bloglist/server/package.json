@@ -1,0 +1,42 @@
+{
+  "name": "bloglist",
+  "version": "0.0.1",
+  "description": "a blog list application that allows users to save information about blogs",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "watch": "cross-env NODE_ENV=development nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AHEriksen/Full-Stack-Open-2019.git"
+  },
+  "author": "ahe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AHEriksen/Full-Stack-Open-2019/issues"
+  },
+  "homepage": "https://github.com/AHEriksen/Full-Stack-Open-2019#readme",
+  "devDependencies": {
+    "cross-env": "^5.2.1",
+    "eslint": "^6.4.0",
+    "jest": "^24.9.0",
+    "lodash": "^4.17.15",
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.11",
+    "mongoose-unique-validator": "^2.0.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

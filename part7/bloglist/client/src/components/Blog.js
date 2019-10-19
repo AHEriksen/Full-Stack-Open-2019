@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import blogService from '../services/blogs';
 import { setNotification } from '../reducers/notificationReducer';
+import { addVote, removeBlog } from '../reducers/blogReducer';
 
-const Blog = (props) => {
+const Blog = ({ blog, username, addVote, removeBlog, setNotification }) => {
   const [extraInfo, setExtraInfo] = useState(false);
 
   const blogStyle = {
@@ -19,47 +19,54 @@ const Blog = (props) => {
     setExtraInfo(!extraInfo);
   };
 
-  const handleRemoval = () => {
-    if (window.confirm(`remove blog ${props.blog.title} by ${props.blog.author}`)) {
+  const handleRemoval = async () => {
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
       try {
-        blogService.remove(props.blog);
+        removeBlog(blog);
+        const msg = {
+          text: `the blog ${blog.title} by ${blog.author} was deleted`, success: true
+        };
+        setNotification(msg, 5);
       }
       catch (exception) {
         const msg = {
-          text: 'Deletion failed, unauthorized?',
+          text: 'deletion failed, unauthorized',
           success: false
         };
-        props.setNotification(msg, 5);
+        setNotification(msg, 5);
       }
     }
   };
 
   const standardDisplay = () => (
-    <div onClick={handleDisplay} className='toggleOn'>{props.blog.title} {props.blog.author}</div>
+    <div onClick={handleDisplay} className='toggleOn'>{blog.title} {blog.author}</div>
   );
 
   const extraDisplay = () => (
     <>
-      <div onClick={handleDisplay} className='toggleOff'>{props.blog.title} {props.blog.author}</div>
-      <a href={props.blog.url}>{props.blog.url}</a>
-      <div>{props.blog.likes} likes <button onClick={incrementLikes}>like</button></div>
-      <div>{`added by ${props.blog.user.name}`}</div>
-      <button style={ { display: props.username === props.blog.user.username ? '' : 'none' }} onClick={handleRemoval}>remove</button>
+      <div onClick={handleDisplay} className='toggleOff'>{blog.title} {blog.author}</div>
+      <a href={blog.url}>{blog.url}</a>
+      <div>{blog.likes} likes <button onClick={incrementLikes}>like</button></div>
+      <div>{`added by ${blog.user.name}`}</div>
+      <button style={ { display: username === blog.user.username ? '' : 'none' }} onClick={handleRemoval}>remove</button>
     </>
   );
 
   const incrementLikes = () => {
-    const newBlog = { ...props.blog };
-    newBlog.likes = props.blog.likes + 1;
     try {
-      blogService.update(newBlog);
+      addVote(blog);
+      const msg = {
+        text: `You voted for ${blog.title}`,
+        success: true
+      };
+      setNotification(msg, 5);
     }
     catch (exception) {
       const msg = {
         text: 'Could not increment likes',
         success: false
       };
-      props.setNotification(msg, 5);
+      setNotification(msg, 5);
     }
   };
 
@@ -78,7 +85,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  setNotification
+  setNotification,
+  addVote,
+  removeBlog
 };
 
 const connectedBlog = connect(mapStateToProps, mapDispatchToProps)(Blog);

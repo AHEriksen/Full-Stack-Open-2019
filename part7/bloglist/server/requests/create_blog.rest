@@ -1,0 +1,10 @@
+post http://localhost:3001/api/blogs
+Content-Type: application/json 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpZCI6IjVkN2ZiOTExNGRlNjJhM2ZlMDBmODJhMyIsImlhdCI6MTU2ODY1MTc3OH0.3vcMcBQH-TOZfLkxlv9fUsMyrpb5oaMKdtQtHkKznik
+
+{
+  "title": "testblog",
+  "author": "again",
+  "url": "https://www.twitter.com",
+  "likes": 7
+}
