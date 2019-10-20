@@ -4,30 +4,19 @@ import { useField } from './../hooks';
 import { setNotification } from '../reducers/notificationReducer';
 import { createBlog } from '../reducers/blogReducer';
 
-const NewBlog = ({ createBlog, blogFormRef, setNotification }) => {
-  const title = useField('text');
-  const author = useField('text');
-  const url = useField('text');
+const NewBlog = (props) => {
+  const [title, resetTitle] = useField('text');
+  const [author, resetAuthor] = useField('text');
+  const [url, resetUrl] = useField('text');
 
-  const handleCreation = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
-    const newBlog = { title: title.input.value, author: author.input.value, url: url.input.value };
-
-    try {
-      createBlog(newBlog);
-      blogFormRef.current.toggleVisibility();
-      const msg = { text: `a new blog ${title.input.value} by ${author.input.value} added`, success: true };
-      setNotification(msg, 5);
-      title.reset(); author.reset(); url.reset();
-    }
-    catch (exception) {
-      console.log(exception);
-    }
+    props.handleCreation({ title: title.input.value, author: author.input.value, url: url.input.value });
+    resetTitle(); resetAuthor(); resetUrl();
   };
 
   return (
-    <form onSubmit={handleCreation}>
+    <form onSubmit={handleSubmit}>
       <div>
         title <input {...title.input}/>
       </div>

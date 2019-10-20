@@ -10,9 +10,8 @@ export const initializeBlogs = () => {
   };
 };
 
-export const addVote = (blog) => {
+export const addVote = (updatedBlog) => {
   return async (dispatch) => {
-    const updatedBlog = { ...blog, likes: blog.likes + 1 };
     blogService.update(updatedBlog);
     dispatch({
       type: 'ADD_VOTE',

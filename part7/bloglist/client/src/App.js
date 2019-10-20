@@ -11,10 +11,11 @@ import Togglable from './components/Togglable';
 import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
 import { setUser, resetUser } from './reducers/userReducer';
+import { addVote, createBlog, removeBlog } from './reducers/blogReducer';
 
 const App = (props) => {
-  const username = useField('text');
-  const password = useField('text');
+  const [username] = useField('text');
+  const [password] = useField('text');
   const blogFormRef = React.createRef();
 
   const { setUser } = props;
@@ -48,10 +49,9 @@ const App = (props) => {
 
       blogService.setToken(user.token);
       props.setUser(user);
-      username.reset();
-      password.reset();
     }
     catch (exception) {
+      console.log(exception);
       const msg = {
         text: 'wrong username or password',
         success: false,
@@ -65,11 +65,60 @@ const App = (props) => {
     window.localStorage.removeItem('loggedBlogAppUser');
   };
 
+  const handleCreation = async (blog) => {
+    blogFormRef.current.toggleVisibility();
+    try {
+      await props.createBlog(blog);
+      const msg = { text: `a new blog ${blog.title} by ${blog.author} added`, success: true };
+      props.setNotification(msg, 5);
+    }
+    catch (exception) {
+      console.log(exception);
+    }
+  };
+
+  const incrementLikes = async (blog) => {
+    try {
+      await props.addVote(blog);
+      const msg = {
+        text: `You voted for ${blog.title}`,
+        success: true
+      };
+      props.setNotification(msg, 5);
+    }
+    catch (exception) {
+      const msg = {
+        text: 'Could not increment likes',
+        success: false
+      };
+      props.setNotification(msg, 5);
+    }
+  };
+
+  const handleRemoval = async (blog) => {
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await props.removeBlog(blog);
+        const msg = {
+          text: `the blog ${blog.title} by ${blog.author} was deleted`, success: true
+        };
+        props.setNotification(msg, 5);
+      }
+      catch (exception) {
+        const msg = {
+          text: 'deletion failed, unauthorized',
+          success: false
+        };
+        props.setNotification(msg, 5);
+      }
+    }
+  };
+
   const blogList = () => {
     const sortedBlogs = [...props.blogs]
       .sort((blog1, blog2) => blog2.likes - blog1.likes);
     return (<>
-      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} username={props.user.username}/>)}
+      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} remove={handleRemoval} increment={incrementLikes} username={props.user.username}/>)}
     </>);
   };
 
@@ -87,7 +136,6 @@ const App = (props) => {
     </form>
   );
 
-  console.log(props.user);
   if (props.user === null) {
     return (
       <div>
@@ -107,7 +155,7 @@ const App = (props) => {
           <button onClick={handleLogout}>logout</button>
           <h2>create new</h2>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <NewBlog blogFormRef={blogFormRef}/>
+            <NewBlog handleCreation={handleCreation}/>
           </Togglable>
         </div>
         {blogList()}
@@ -127,7 +175,10 @@ const mapDispatchToProps = {
   setNotification,
   initializeBlogs,
   setUser,
-  resetUser
+  resetUser,
+  addVote,
+  createBlog,
+  removeBlog
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
