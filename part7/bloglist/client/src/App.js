@@ -8,7 +8,6 @@ import {
 import { useField } from './hooks';
 import loginService from './services/login';
 import blogService from './services/blogs';
-import Blog from './components/Blog';
 import Notification from './components/Notification';
 import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
@@ -18,6 +17,7 @@ import { addVote, createBlog, removeBlog } from './reducers/blogReducer';
 import HomeView from './components/HomeView';
 import UserView from './components/UserView';
 import UsersView from './components/UsersView';
+import BlogView from './components/BlogView';
 
 const App = (props) => {
   const [username] = useField('text');
@@ -107,6 +107,7 @@ const App = (props) => {
     }
   };
 
+  /*
   const handleRemoval = async (blog) => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
       try {
@@ -125,14 +126,7 @@ const App = (props) => {
       }
     }
   };
-
-  const blogList = () => {
-    const sortedBlogs = [...props.blogs]
-      .sort((blog1, blog2) => blog2.likes - blog1.likes);
-    return (<>
-      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} remove={handleRemoval} increment={incrementLikes} username={props.user.username}/>)}
-    </>);
-  };
+  */
 
   const loginForm = () => (
     <form onSubmit={ handleLogin }>
@@ -151,8 +145,6 @@ const App = (props) => {
   const padding = {
     padding: 5
   };
-
-  const findUserById = (id) => props.users.find(user => user.id === id);
 
   if (props.user === null) {
     return (
@@ -177,9 +169,10 @@ const App = (props) => {
             <Link style={padding} to='/'>home</Link>
             <Link style={padding} to='/users'>users</Link>
           </div>
-          <Route exact path='/' render={() => <HomeView ref={blogFormRef} handleCreation={handleCreation} blogList={blogList}/>}></Route>
+          <Route exact path='/' render={() => <HomeView ref={blogFormRef} handleCreation={handleCreation}/>}></Route>
           <Route exact path='/users' render={() => <UsersView/>}></Route>
-          <Route exact path='/users/:id' render={({ match }) => <UserView user={findUserById(match.params.id)}/>}></Route>
+          <Route exact path='/users/:id' render={({ match }) => <UserView id={match.params.id}/>}></Route>
+          <Route exact path='/blogs/:id' render={({ match }) => <BlogView id={match.params.id} increment={incrementLikes}/>}></Route>
         </Router>
       </div>
     );

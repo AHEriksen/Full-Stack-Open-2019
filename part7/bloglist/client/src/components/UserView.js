@@ -6,7 +6,7 @@ const UserView = (props) => {
   const blogList = () => (
     <ul>
       {
-        props.userInfo.blogs
+        props.user.blogs
           .map(blog => <li key={blog.id}>{blog.title}</li>)
       }
     </ul>
@@ -19,18 +19,18 @@ const UserView = (props) => {
       <div>
         <h1>{props.user.name}</h1>
         <h2>added blogs</h2>
-        { props.userInfo &&
+        { props.user &&
             blogList()
         }
       </div>
     );
   }
-
 };
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(ownProps.id);
   return {
-    userInfo: ownProps.user
+    user: state.users.find(user => user.id === ownProps.id)
   };
 };
 
