@@ -25,7 +25,8 @@ const App = (props) => {
   const [password] = useField('text');
   const blogFormRef = React.createRef();
 
-  const { setUser } = props;
+  const { setUser, initializeUsers, initializeBlogs } = props;
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
     if (loggedUserJSON) {
@@ -35,12 +36,10 @@ const App = (props) => {
     }
   }, [setUser]);
 
-  const { initializeUsers } = props;
   useEffect(() => {
     initializeUsers();
   }, [initializeUsers]);
 
-  const { initializeBlogs } = props;
   useEffect(() => {
     initializeBlogs();
   }, [initializeBlogs]);
@@ -61,7 +60,6 @@ const App = (props) => {
 
       blogService.setToken(user.token);
       props.setUser(user);
-      console.log(user);
     }
     catch (exception) {
       console.log(exception);

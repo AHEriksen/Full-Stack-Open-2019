@@ -24,7 +24,7 @@ blogsRouter.post('/', async (request, response, next) => {
       return response.status(401).json({ error: 'token missing or invalid' });
     }
 
-    const user = await User.findOne({ username: decodedToken.username }); // any user okay for now
+    const user = await User.findOne({ username: decodedToken.username });
 
     const blog = new Blog({
       title: body.title,
@@ -38,6 +38,20 @@ blogsRouter.post('/', async (request, response, next) => {
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
     response.json(savedBlog.toJSON());
+  }
+  catch(exception) {
+    next(exception);
+  }
+});
+
+blogsRouter.post('/:id/comments', async (request, response, next) => {
+  const body = request.body;
+
+  try {
+    const blog = await Blog.findOne({ _id: request.params.id });
+    blog.comments = blog.comments.concat(body.comment);
+    await blog.save();
+    response.json(blog.toJSON());
   }
   catch(exception) {
     next(exception);
