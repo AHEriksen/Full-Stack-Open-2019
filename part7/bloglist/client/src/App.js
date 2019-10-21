@@ -158,17 +158,14 @@ const App = (props) => {
   else {
     return (
       <div>
-        <div>
-          <h2>blogs</h2>
-          <Notification/>
-          {`${props.user.name} logged in`}
-          <button onClick={handleLogout}>logout</button>
-        </div>
         <Router>
-          <div>
-            <Link style={padding} to='/'>home</Link>
+          <div className='navMenu'>
+            <Link style={padding} to='/'>blogs</Link>
             <Link style={padding} to='/users'>users</Link>
+            {`${props.user.name} logged in `}
+            <button onClick={handleLogout}>logout</button>
           </div>
+          <Notification />
           <Route exact path='/' render={() => <HomeView ref={blogFormRef} handleCreation={handleCreation}/>}></Route>
           <Route exact path='/users' render={() => <UsersView/>}></Route>
           <Route exact path='/users/:id' render={({ match }) => <UserView id={match.params.id}/>}></Route>

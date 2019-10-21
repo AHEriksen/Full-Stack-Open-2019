@@ -1,5 +1,5 @@
 .successNotification {
-  color: blue;
+  color: lightgreen;
   background-color: grey;
   border: 5px solid burlywood;
   display: inline-block;
@@ -25,3 +25,12 @@
   text-align: center;
   margin-bottom: 20px;
 }
+
+.navMenu {
+  background-color: beige;
+  display: block;
+  height: auto;
+  width: auto;
+  font-family: Verdana;
+  font-size: 15px;
+};
