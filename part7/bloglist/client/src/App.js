@@ -1,17 +1,22 @@
 import './index.css';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import {
+  BrowserRouter as Router,
+  Route, Link
+} from 'react-router-dom';
 import { useField } from './hooks';
 import loginService from './services/login';
 import blogService from './services/blogs';
 import Blog from './components/Blog';
-import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
-import Togglable from './components/Togglable';
 import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
+import { initializeUsers } from './reducers/usersReducer';
 import { setUser, resetUser } from './reducers/userReducer';
 import { addVote, createBlog, removeBlog } from './reducers/blogReducer';
+import HomeView from './components/HomeView';
+import UserView from './components/UserView';
 import UsersView from './components/UsersView';
 
 const App = (props) => {
@@ -28,6 +33,11 @@ const App = (props) => {
       setUser(user);
     }
   }, [setUser]);
+
+  const { initializeUsers } = props;
+  useEffect(() => {
+    initializeUsers();
+  }, [initializeUsers]);
 
   const { initializeBlogs } = props;
   useEffect(() => {
@@ -50,6 +60,7 @@ const App = (props) => {
 
       blogService.setToken(user.token);
       props.setUser(user);
+      console.log(user);
     }
     catch (exception) {
       console.log(exception);
@@ -137,7 +148,11 @@ const App = (props) => {
     </form>
   );
 
-  return <UsersView/>;
+  const padding = {
+    padding: 5
+  };
+
+  const findUserById = (id) => props.users.find(user => user.id === id);
 
   if (props.user === null) {
     return (
@@ -151,17 +166,21 @@ const App = (props) => {
   else {
     return (
       <div>
-        <h2>blogs</h2>
-        <Notification/>
         <div>
+          <h2>blogs</h2>
+          <Notification/>
           {`${props.user.name} logged in`}
           <button onClick={handleLogout}>logout</button>
-          <h2>create new</h2>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <NewBlog handleCreation={handleCreation}/>
-          </Togglable>
         </div>
-        {blogList()}
+        <Router>
+          <div>
+            <Link style={padding} to='/'>home</Link>
+            <Link style={padding} to='/users'>users</Link>
+          </div>
+          <Route exact path='/' render={() => <HomeView ref={blogFormRef} handleCreation={handleCreation} blogList={blogList}/>}></Route>
+          <Route exact path='/users' render={() => <UsersView/>}></Route>
+          <Route exact path='/users/:id' render={({ match }) => <UserView user={findUserById(match.params.id)}/>}></Route>
+        </Router>
       </div>
     );
   }
@@ -170,13 +189,15 @@ const App = (props) => {
 const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
-    user: state.user
+    user: state.user,
+    users: state.users
   };
 };
 
 const mapDispatchToProps = {
   setNotification,
   initializeBlogs,
+  initializeUsers,
   setUser,
   resetUser,
   addVote,

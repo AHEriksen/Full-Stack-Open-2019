@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { initializeUsers } from '../reducers/usersReducer';
+import { Link } from 'react-router-dom';
 
 const UsersView = (props) => {
-
-  const { initializeUsers } = props;
-  useEffect(() => {
-    initializeUsers();
-  }, [initializeUsers]);
 
   const userTable = () => (
     <table>
@@ -19,7 +14,7 @@ const UsersView = (props) => {
         {props.users
           .map(user =>
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
               <td>{user.blogs.length}</td>
             </tr>)}
       </tbody>
@@ -40,9 +35,5 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {
-  initializeUsers
-};
-
-const connectedUserView = connect(mapStateToProps, mapDispatchToProps)(UsersView);
+const connectedUserView = connect(mapStateToProps)(UsersView);
 export default connectedUserView;
