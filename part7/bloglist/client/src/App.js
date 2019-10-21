@@ -3,21 +3,22 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   BrowserRouter as Router,
-  Route, Link
+  Route
 } from 'react-router-dom';
 import { useField } from './hooks';
 import loginService from './services/login';
 import blogService from './services/blogs';
 import Notification from './components/Notification';
+import NavigationMenu from './components/NavigationMenu';
 import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
 import { initializeUsers } from './reducers/usersReducer';
 import { setUser, resetUser } from './reducers/userReducer';
 import { addVote, createBlog, removeBlog } from './reducers/blogReducer';
-import HomeView from './components/HomeView';
-import UserView from './components/UserView';
-import UsersView from './components/UsersView';
-import BlogView from './components/BlogView';
+import HomeView from './components/views/HomeView';
+import UserView from './components/views/UserView';
+import UsersView from './components/views/UsersView';
+import BlogView from './components/views/BlogView';
 
 const App = (props) => {
   const [username] = useField('text');
@@ -142,10 +143,6 @@ const App = (props) => {
     </form>
   );
 
-  const padding = {
-    padding: 5
-  };
-
   if (props.user === null) {
     return (
       <div>
@@ -159,12 +156,7 @@ const App = (props) => {
     return (
       <div>
         <Router>
-          <div className='navMenu'>
-            <Link style={padding} to='/'>blogs</Link>
-            <Link style={padding} to='/users'>users</Link>
-            {`${props.user.name} logged in `}
-            <button onClick={handleLogout}>logout</button>
-          </div>
+          <NavigationMenu handleLogout={handleLogout}/>
           <Notification />
           <Route exact path='/' render={() => <HomeView ref={blogFormRef} handleCreation={handleCreation}/>}></Route>
           <Route exact path='/users' render={() => <UsersView/>}></Route>

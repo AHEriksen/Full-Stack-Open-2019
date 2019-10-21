@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Togglable from './Togglable';
-import NewBlog from './NewBlog';
-import Blog from './Blog';
+import Togglable from '../Togglable';
+import NewBlog from '../NewBlog';
+import Blog from '../Blog';
 
 // eslint-disable-next-line react/display-name
 const HomeView = React.forwardRef((props, ref) => {
