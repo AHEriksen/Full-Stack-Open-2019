@@ -12,6 +12,7 @@ import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
 import { setUser, resetUser } from './reducers/userReducer';
 import { addVote, createBlog, removeBlog } from './reducers/blogReducer';
+import UsersView from './components/UsersView';
 
 const App = (props) => {
   const [username] = useField('text');
@@ -135,6 +136,8 @@ const App = (props) => {
       <button type="submit">login</button>
     </form>
   );
+
+  return <UsersView/>;
 
   if (props.user === null) {
     return (
