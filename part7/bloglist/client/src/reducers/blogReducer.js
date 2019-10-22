@@ -21,6 +21,16 @@ export const addVote = (blog) => {
   };
 };
 
+export const addComment = (blog, comment) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.addComment(blog, { comment });
+    dispatch({
+      type: 'ADD_COMMENT',
+      data: updatedBlog
+    });
+  };
+};
+
 export const createBlog = (content) => {
   return async (dispatch) => {
     const newBlog = await blogService.create(content);
@@ -45,7 +55,8 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case 'INIT_BLOGS':
       return action.data;
-    case 'ADD_VOTE': {
+    case 'ADD_VOTE':
+    case 'ADD_COMMENT': {
       const updatedBlog = action.data;
       return state.map(blog => blog.id === updatedBlog.id ? updatedBlog: blog);
     }

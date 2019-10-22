@@ -48,10 +48,14 @@ blogsRouter.post('/:id/comments', async (request, response, next) => {
   const body = request.body;
 
   try {
-    const blog = await Blog.findOne({ _id: request.params.id });
+    const blog = await Blog.findById(request.params.id);
+    console.log(blog);
     blog.comments = blog.comments.concat(body.comment);
     await blog.save();
-    response.json(blog.toJSON());
+    const updatedBlog = await Blog
+      .findById(request.params.id)
+      .populate('user', { username: 1, name: 1 });
+    response.json(updatedBlog.toJSON());
   }
   catch(exception) {
     next(exception);

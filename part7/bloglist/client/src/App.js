@@ -105,7 +105,7 @@ const App = (props) => {
       props.setNotification(msg, 5);
     }
   };
-
+  
   /*
   const handleRemoval = async (blog) => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
@@ -137,7 +137,7 @@ const App = (props) => {
         password
         <input {...password.input}/>
       </div>
-      <button type="submit">login</button>
+      <button type='submit'>login</button>
     </form>
   );
 
@@ -170,7 +170,6 @@ const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
     user: state.user,
-    users: state.users
   };
 };
 
