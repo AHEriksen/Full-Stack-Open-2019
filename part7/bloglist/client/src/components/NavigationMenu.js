@@ -1,16 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { IconButton, Button } from '@material-ui/core';
+import { PowerSettingsNew } from '@material-ui/icons';
 
 const NavigationMenu = (props) => {
 
-  const padding = { padding: 5 };
   return (
-    <div className='navMenu'>
-      <Link style={padding} to='/'>blogs</Link>
-      <Link style={padding} to='/users'>users</Link>
+    <div>
+      <Button component={Link} to={'/'}>blogs</Button>
+      <Button component={Link} to={'/users'}>users</Button>
       {`${props.user.name} logged in `}
-      <button onClick={props.handleLogout}>logout</button>
+      <IconButton onClick={props.handleLogout}>
+        <PowerSettingsNew>logout</PowerSettingsNew>
+      </IconButton>
     </div>
   );
 };

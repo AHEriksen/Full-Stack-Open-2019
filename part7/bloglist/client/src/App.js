@@ -19,6 +19,8 @@ import HomeView from './components/views/HomeView';
 import UserView from './components/views/UserView';
 import UsersView from './components/views/UsersView';
 import BlogView from './components/views/BlogView';
+import { Container, IconButton, Input, InputLabel } from '@material-ui/core';
+import { ExitToApp } from '@material-ui/icons';
 
 const App = (props) => {
   const [username] = useField('text');
@@ -105,7 +107,7 @@ const App = (props) => {
       props.setNotification(msg, 5);
     }
   };
-  
+
   /*
   const handleRemoval = async (blog) => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
@@ -130,29 +132,31 @@ const App = (props) => {
   const loginForm = () => (
     <form onSubmit={ handleLogin }>
       <div>
-        username
-        <input {...username.input}/>
+        <InputLabel>username</InputLabel>
+        <Input {...username.input}/>
       </div>
       <div>
-        password
-        <input {...password.input}/>
+        <InputLabel>password</InputLabel>
+        <Input {...password.input}/>
       </div>
-      <button type='submit'>login</button>
+      <IconButton type='submit'>
+        <ExitToApp />
+      </IconButton>
     </form>
   );
 
   if (props.user === null) {
     return (
-      <div>
+      <Container>
         <h2>Log in to application</h2>
-        <Notification/>
+        <Notification />
         {loginForm()}
-      </div>
+      </Container>
     );
   }
   else {
     return (
-      <div>
+      <Container>
         <Router>
           <NavigationMenu handleLogout={handleLogout}/>
           <Notification />
@@ -161,7 +165,7 @@ const App = (props) => {
           <Route exact path='/users/:id' render={({ match }) => <UserView id={match.params.id}/>}></Route>
           <Route exact path='/blogs/:id' render={({ match }) => <BlogView id={match.params.id} increment={incrementLikes}/>}></Route>
         </Router>
-      </div>
+      </Container>
     );
   }
 };

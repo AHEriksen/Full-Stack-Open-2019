@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { useField } from './../hooks';
 import { setNotification } from '../reducers/notificationReducer';
 import { createBlog } from '../reducers/blogReducer';
+import { Input, InputLabel, IconButton, FormControl } from '@material-ui/core';
+import { AddBox } from '@material-ui/icons';
 
 const NewBlog = (props) => {
   const [title, resetTitle] = useField('text');
@@ -17,17 +19,12 @@ const NewBlog = (props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        title <input {...title.input}/>
-      </div>
-      <div>
-        author <input {...author.input}/>
-      </div>
-      <div>
-        url <input {...url.input}/>
-      </div>
-      <button type="submit">create</button>
-
+      <InputLabel>title</InputLabel> <Input {...title.input}/>
+      <InputLabel>author</InputLabel> <Input {...author.input}/>
+      <InputLabel>url</InputLabel> <Input {...url.input}/>
+      <IconButton type="submit">
+        <AddBox />
+      </IconButton>
     </form>
   );
 };

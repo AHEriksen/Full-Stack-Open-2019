@@ -1,24 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Table, TableBody, TableHead, TableCell, TableRow, Button } from '@material-ui/core';
 
 const UsersView = (props) => {
 
   const userTable = () => (
-    <table>
-      <tbody>
-        <tr>
-          <th></th>
-          <th>blogs created</th>
-        </tr>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell></TableCell>
+          <TableCell>blogs created</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {props.users
           .map(user =>
-            <tr key={user.id}>
-              <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
-              <td>{user.blogs.length}</td>
-            </tr>)}
-      </tbody>
-    </table>
+            <TableRow key={user.id}>
+              <TableCell><Button component={Link} to={`/users/${user.id}`}>{user.name}</Button></TableCell>
+              <TableCell>{user.blogs.length}</TableCell>
+            </TableRow>)}
+      </TableBody>
+    </Table>
   );
 
   return (

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Typography } from '@material-ui/core';
 
-const Blog = ({ blog, username, remove, increment }) => {
-  const [extraInfo, setExtraInfo] = useState(false);
+
+const Blog = ({ blog }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -12,28 +13,14 @@ const Blog = ({ blog, username, remove, increment }) => {
     backgroundColor: 'silver',
   };
 
-  const handleDisplay = () => {
-    setExtraInfo(!extraInfo);
-  };
-
   const standardDisplay = () => (
-    <div onClick={handleDisplay} className='toggleOn'>{blog.title} {blog.author}</div>
-  );
-
-  const extraDisplay = () => (
-    <>
-      <div onClick={handleDisplay} className='toggleOff'>{blog.title} {blog.author}</div>
-      <a href={blog.url}>{blog.url}</a>
-      <div>{blog.likes} likes <button onClick={() => increment(blog)}>like</button></div>
-      <div>{`added by ${blog.user.name}`}</div>
-      <button style={ { display: username === blog.user.username ? '' : 'none' }} onClick={() => remove(blog)}>remove</button>
-    </>
+    <Typography>{blog.title} {blog.author}</Typography>
   );
 
   return (
     <div style={blogStyle} className='blog'>
       <div>
-        {extraInfo ? extraDisplay() : standardDisplay()}
+        {standardDisplay()}
       </div>
     </div>);
 };

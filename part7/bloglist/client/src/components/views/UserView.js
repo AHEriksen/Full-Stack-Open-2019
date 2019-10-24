@@ -1,15 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { LibraryBooks } from '@material-ui/icons';
 
 const UserView = (props) => {
 
   const blogList = () => (
-    <ul>
-      {
-        props.user.blogs
-          .map(blog => <li key={blog.id}>{blog.title}</li>)
-      }
-    </ul>
+    <List>
+      {props.user.blogs
+        .map(blog =>
+          <ListItem key={blog.id}>
+            <ListItemIcon>
+              <LibraryBooks />
+            </ListItemIcon>
+            <ListItemText primary={blog.title} />
+          </ListItem>
+        )}
+    </List>
   );
 
   if (props.user === undefined)
@@ -28,7 +35,6 @@ const UserView = (props) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps.id);
   return {
     user: state.users.find(user => user.id === ownProps.id)
   };

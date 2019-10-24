@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useField } from '../../hooks';
 import { addComment } from '../../reducers/blogReducer';
+import { IconButton, Input, List, ListItem, ListItemIcon, ListItemText, Link, Typography } from '@material-ui/core';
+import { AddComment, Comment, ThumbUp } from '@material-ui/icons';
 
 const BlogView = (props) => {
   const [comment, resetComment] = useField('text');
@@ -15,8 +17,10 @@ const BlogView = (props) => {
   const commentForm = () => (
     <form onSubmit={handleSubmit}>
       <div>
-        <input {...comment.input} />
-        <button type='submit'>add comment</button>
+        <Input {...comment.input} />
+        <IconButton type='submit' color='primary'>
+          <AddComment>add comment</AddComment>
+        </IconButton>
       </div>
     </form>
   );
@@ -27,15 +31,22 @@ const BlogView = (props) => {
     return (
       <div>
         <h2>{props.blog.title}</h2>
-        <a href={props.blog.url}>{props.blog.url}</a>
-        <p>{props.blog.likes} likes <button onClick={() => props.increment(props.blog)}>like</button></p>
-        <p>added by {props.blog.user.name}</p>
+        <Link href={props.blog.url}>{props.blog.url}</Link>
+        <Typography>{props.blog.likes} likes <IconButton onClick={() => props.increment(props.blog)}><ThumbUp /></IconButton></Typography>
+        <Typography>added by {props.blog.user.name}</Typography>
         <h3>comments</h3>
         {commentForm()}
-        <ul>
+        <List>
           {props.blog.comments
-            .map((comment, index) => <li key={index}>{comment}</li>)}
-        </ul>
+            .map((comment, index) =>
+              <ListItem key={index}>
+                <ListItemIcon>
+                  <Comment />
+                </ListItemIcon>
+                <ListItemText primary={comment} />
+              </ListItem>
+            )}
+        </List>
       </div>
     );
   }

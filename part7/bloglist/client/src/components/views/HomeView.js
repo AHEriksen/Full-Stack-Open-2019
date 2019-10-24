@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Togglable from '../Togglable';
 import NewBlog from '../NewBlog';
 import Blog from '../Blog';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
 // eslint-disable-next-line react/display-name
 const HomeView = React.forwardRef((props, ref) => {
@@ -12,10 +13,15 @@ const HomeView = React.forwardRef((props, ref) => {
     const sortedBlogs = [...props.blogs]
       .sort((blog1, blog2) => blog2.likes - blog1.likes);
     return (
-      <>
-      {sortedBlogs.map(blog =>
-        <Link key={blog.id} to={`/blogs/${blog.id}`}><Blog blog={blog}/></Link>)}
-      </>);
+      <List >
+        {sortedBlogs
+          .map(blog =>
+            <ListItem button key={blog.id}>
+              <ListItemText primary={<Link key={blog.id} to={`/blogs/${blog.id}`}><Blog blog={blog} /></Link>} />
+            </ListItem>
+          )}
+      </List>
+    );
   };
 
   return (

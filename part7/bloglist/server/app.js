@@ -9,8 +9,6 @@ const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
 
-console.log(`connecting to ${config.MONGODB_URI}`);
-
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useFindAndModify: false })
   .then(() => {
     console.log('connected to mongoDB');
