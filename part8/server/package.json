@@ -1,0 +1,28 @@
+{
+  "name": "library-backend",
+  "version": "0.1.0",
+  "description": "",
+  "main": "library-backend.js",
+  "scripts": {
+    "start": "npm library-backend.js",
+    "watch": "nodemon library-backend.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AHEriksen/Full-Stack-Open-2019.git"
+  },
+  "author": "ahe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AHEriksen/Full-Stack-Open-2019/issues"
+  },
+  "homepage": "https://github.com/AHEriksen/Full-Stack-Open-2019#readme",
+  "dependencies": {
+    "apollo-server": "^2.9.7",
+    "graphql": "^14.5.8"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
