@@ -6,7 +6,7 @@ import blogService from './services/blogs';
 import Blog from './components/Blog';
 import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
-import Togglable from './components/Togglable';
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);

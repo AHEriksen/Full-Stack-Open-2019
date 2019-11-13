@@ -1,8 +1,7 @@
 module.exports = {
 	'env': {
 		'browser': true,
-		'es6': true,
-		'jest/globals': true
+		'es6': true
 	},
 	'extends': 
 		[
@@ -21,17 +20,14 @@ module.exports = {
 		'sourceType': 'module'
 	},
 	'plugins': [
-		'react', 'jest'
+		'react'
 	],
 	'rules': {
 		'indent': [
 			'error',
 			2
 		],
-		'linebreak-style': [
-				'error',
-				'windows'
-		],
+		'linebreak-style': 0,
 		'quotes': [
 				'error',
 				'single'
