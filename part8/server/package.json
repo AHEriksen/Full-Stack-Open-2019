@@ -20,7 +20,10 @@
   "homepage": "https://github.com/AHEriksen/Full-Stack-Open-2019#readme",
   "dependencies": {
     "apollo-server": "^2.9.7",
+    "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
+    "mongoose": "^5.7.12",
+    "mongoose-unique-validator": "^2.0.3",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
