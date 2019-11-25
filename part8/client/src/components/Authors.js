@@ -11,8 +11,8 @@ const Authors = ({ result, show, editAuthor }) => {
 
   const submit = async (e) => {
     e.preventDefault();
-
-    await editAuthor({ variables: { name: selectedOption.value, setBornTo: born } } );
+    console.log('born:', born);
+    await editAuthor({ variables: { name: selectedOption.value, setBornTo: born.toString().length > 0 ? born : null } } );
 
     setSelectedOption(null);
     setBorn('');
@@ -46,25 +46,29 @@ const Authors = ({ result, show, editAuthor }) => {
             )}
           </tbody>
         </table>
-        <h3>Set birthyear</h3>
-        <form onSubmit={submit}>
+        {editAuthor &&
           <div>
-            <Select
-              value={selectedOption}
-              onChange={(selected) => setSelectedOption(selected)}
-              options={options}
-            />
+            <h3>Set birthyear</h3>
+            <form onSubmit={submit}>
+              <div>
+                <Select
+                  value={selectedOption}
+                  onChange={(selected) => setSelectedOption(selected)}
+                  options={options}
+                />
+              </div>
+              <div>
+                born
+                <input
+                  type='number'
+                  value={born}
+                  onChange={({ target }) => setBorn(Number(target.value))}
+                />
+              </div>
+              <button type='submit'>update author</button>
+            </form>
           </div>
-          <div>
-            born
-            <input
-              type='number'
-              value={born}
-              onChange={({ target }) => setBorn(Number(target.value))}
-            />
-          </div>
-          <button type='submit'>update author</button>
-        </form>
+        }
       </div>
     );
   }
