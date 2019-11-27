@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
+import Recommendations from './components/Recommendations';
 import { gql } from 'apollo-boost';
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks';
-
-const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      value
-    }
-  }
-`;
 
 const ALL_AUTHORS = gql`
 {
@@ -35,6 +28,33 @@ const ALL_BOOKS = gql`
   }
 }`;
 
+const ALL_GENRE_BOOKS = gql`
+  query allGenreBooks($genre: String) {
+    allBooks(genre: $genre) {
+      title
+      published
+      author {
+        name
+      }
+      genres
+    }
+  }`;
+
+const ME = gql`
+{
+  me {
+    favoriteGenre
+  }
+}`;
+
+const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`;
+
 const CREATE_BOOK = gql`
   mutation createBook(
     $title: String!
@@ -55,8 +75,7 @@ const CREATE_BOOK = gql`
       }
       genres
     }
-  }
-`;
+  }`;
 
 const EDIT_AUTHOR = gql`
   mutation editAuthor($name: String!, $setBornTo: Int!) {
@@ -64,8 +83,7 @@ const EDIT_AUTHOR = gql`
       name
       born
     }
-  }
-`;
+  }`;
 
 const App = () => {
   const client = useApolloClient();
@@ -76,6 +94,12 @@ const App = () => {
     setErrorMessage(error.graphQLErrors[0].message);
     setTimeout(() => setErrorMessage(null), 10000);
   };
+  useEffect(() => {
+    if (!token) {
+      const savedToken = localStorage.getItem('library-user-token');
+      setToken(savedToken);
+    }
+  }, [token]);
 
   const [addBook] = useMutation(CREATE_BOOK, {
     onError: handleError,
@@ -89,14 +113,16 @@ const App = () => {
     onError: handleError
   });
 
+  const authors = useQuery(ALL_AUTHORS);
+  const books = useQuery(ALL_BOOKS);
+  const user = useQuery(ME);
+
+
   const logout = () => {
     setToken(null);
     localStorage.clear();
     client.resetStore();
   };
-
-  const authors = useQuery(ALL_AUTHORS);
-  const books = useQuery(ALL_BOOKS);
 
   if (!token) {
     return (
@@ -118,7 +144,8 @@ const App = () => {
         />
         <Books
           show={page === 'books'}
-          result={books}
+          books={books}
+          genreBooks={ALL_GENRE_BOOKS}
         />
         <LoginForm
           show={page === 'login'}
@@ -140,6 +167,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recs')}>recommend</button>
         <button onClick={() => logout()}>logout</button>
       </div>
 
@@ -148,11 +176,20 @@ const App = () => {
       />
 
       <Books
-        show={page === 'books'} result={books}
+        show={page === 'books'}
+        books={books}
+        genreBooks={ALL_GENRE_BOOKS}
       />
 
       <NewBook
         show={page === 'add'} addBook={addBook}
+      />
+
+      <Recommendations
+        show={page === 'recs'}
+        user={user}
+        books={books}
+        genreBooks={ALL_GENRE_BOOKS}
       />
 
     </div>

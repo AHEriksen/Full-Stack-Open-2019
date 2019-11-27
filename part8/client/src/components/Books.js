@@ -1,54 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useApolloClient } from '@apollo/react-hooks';
 
-const Books = ({ result, show }) => {
-  const [selectedGenre, setSelectedGenre] = useState();
+const Books = ({ books, genreBooks, show }) => {
+  const [selectedGenre, setSelectedGenre] = useState('all genres');
+  const [shownBooks, setShownBooks] = useState(null);
+  const client = useApolloClient();
 
-  if (!show) {
-    return null;
-  }
+  console.log(books);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      if (selectedGenre === 'all genres') {
+        if (!books.loading) {
+          setShownBooks(books.data.allBooks);
+        }
+      }
+      else {
+        const { data } = await client.query({
+          query: genreBooks,
+          variables: { genre: selectedGenre }
+        });
+        setShownBooks(data.allBooks);
+      }
+    };
+
+    fetchBooks();
+  }, [books.data.allBooks, selectedGenre]);
+
 
   const uniqueGenres = () => {
-    let genres = result.data.allBooks.map(book => book.genres).flat();
+    let genres = books.data.allBooks.map(book => book.genres).flat();
     const unique = [...new Set(genres)];
     return (
       unique.map((genre, i) => <button onClick={() => setSelectedGenre(genre)} type='text' key={i}>{genre}</button>)
     );
   };
 
-  if (result.loading)
+  if (!show) {
+    return null;
+  }
+  else if (books.loading)
     return <div>loading...</div>;
-
-  let shownBooks = result.data.allBooks;
-  if (selectedGenre)
-    shownBooks = shownBooks.filter((book) => book.genres.includes(selectedGenre));
-  return (
-    <div>
-      <h2>books</h2>
-      <p>in genre <b>{selectedGenre}</b></p>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>
-              author
-            </th>
-            <th>
-              published
-            </th>
-          </tr>
-          {shownBooks.map(a =>
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
+  else {
+    return (
+      <div>
+        <h2>books</h2>
+        <p>in genre <b>{selectedGenre}</b></p>
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>
+                author
+              </th>
+              <th>
+                published
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
-      {uniqueGenres()}
-      <button type='text' onClick={() => setSelectedGenre(null)}>all genres</button>
-    </div>
-  );
+            {shownBooks.map(a =>
+              <tr key={a.title}>
+                <td>{a.title}</td>
+                <td>{a.author.name}</td>
+                <td>{a.published}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        {uniqueGenres()}
+        <button type='text' onClick={() => setSelectedGenre('all genres')}>all genres</button>
+      </div>
+    );
+  }
 };
 
 export default Books;
