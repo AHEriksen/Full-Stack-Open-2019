@@ -13,6 +13,10 @@ const ALL_AUTHORS = gql`
     name
     born
     bookCount
+    id
+    bookList {
+      id
+    }
   }
 }`;
 
@@ -23,6 +27,9 @@ const ALL_BOOKS = gql`
     published
     author {
       name
+      id
+      born
+      bookCount
     }
     genres
     id
@@ -36,6 +43,9 @@ const ALL_GENRE_BOOKS = gql`
       published
       author {
         name
+        id
+        born
+        bookCount
       }
       genres
     }
@@ -94,6 +104,9 @@ const BOOK_ADDED = gql`
       published
       author {
         name
+        id
+        born 
+        bookCount
       }
       genres
       id
@@ -119,7 +132,9 @@ const App = () => {
 
   const [addBook] = useMutation(CREATE_BOOK, {
     onError: handleError,
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
+    update: (store, response) => {
+      updateCache(response.data.addBook);
+    }
   });
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     onError: handleError,
@@ -136,13 +151,41 @@ const App = () => {
   const updateCache = (addedBook) => {
     const includedIn = (arr, obj) => arr.map(book => book.id).includes(obj.id);
 
-    const dataInStore = client.readQuery({ query: ALL_BOOKS });
-    if (!includedIn(dataInStore.allBooks, addedBook)) {
-      dataInStore.allBooks.push(addedBook);
+    const booksInStore = client.readQuery({ query: ALL_BOOKS });
+    if (!includedIn(booksInStore.allBooks, addedBook)) {
+      booksInStore.allBooks.push(addedBook);
       client.writeQuery({
         query: ALL_BOOKS,
-        data: dataInStore
+        data: booksInStore
       });
+    }
+
+    const authorsInStore = client.readQuery({ query: ALL_AUTHORS });
+    const index = authorsInStore.allAuthors.findIndex((author) => author.id === addedBook.author.id);
+    if (index !== -1) {
+      if (!includedIn(authorsInStore.allAuthors[index].bookList, addedBook)) {
+        authorsInStore.allAuthors[index].bookList.push(addedBook);
+      }
+    }
+    else {
+      authorsInStore.allAuthors.push({ ...addedBook.author, bookList: [addedBook] });
+    }
+    client.writeQuery({
+      query: ALL_AUTHORS,
+      data: authorsInStore
+    });
+
+    const userInStore = client.readQuery({ query: ME });
+    if (addedBook.genres.includes(userInStore.me.favoriteGenre)) {
+      const genreBooksInStore = client.readQuery({ query: ALL_GENRE_BOOKS, variables: { genre: user.data.me.favoriteGenre } });
+      if (!includedIn(genreBooksInStore.allBooks, addedBook)) {
+        genreBooksInStore.allBooks.push(addedBook);
+        client.writeQuery({
+          query: ALL_GENRE_BOOKS,
+          variables: { genre: user.data.me.favoriteGenre },
+          data: genreBooksInStore
+        });
+      }
     }
   };
 

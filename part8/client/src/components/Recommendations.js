@@ -7,7 +7,7 @@ const Recommendations = ({ show, user, books, genreBooks }) => {
 
   useEffect( () => {
     const fetchBooks = async () => {
-      if (!user.loading && !books.loading) {
+      if (!user.loading && user.data.me && !books.loading) {
         const { data } = await client.query({
           query: genreBooks,
           variables: { genre: user.data.me.favoriteGenre }
@@ -17,12 +17,12 @@ const Recommendations = ({ show, user, books, genreBooks }) => {
     };
 
     fetchBooks();
-  }, [books.data.allBooks, user.data.me]);
+  }, [books.data, user.data]);
 
   if (!show)
     return null;
 
-  if (user.loading || books.loading)
+  if (user.loading || books.loading || !user.data.me)
     return <div>loading...</div>;
   else {
     return (

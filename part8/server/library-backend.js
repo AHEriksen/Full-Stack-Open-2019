@@ -155,6 +155,7 @@ const typeDefs = gql`
     name: String!
     id: ID!
     born: Int
+    bookList: [Book!]!
     bookCount: Int!
   }
 
@@ -180,7 +181,7 @@ const resolvers = {
       }
     },
     allAuthors: async (root) => {
-      return Author.find({});
+      return Author.find({}).populate('bookList');
     },
     me: async (root, args, context) => {
       return context.currentUser;
@@ -188,7 +189,7 @@ const resolvers = {
   },
   Author: {
     bookCount: async (root) => {
-      return Book.find( { author: { $in: root }}).countDocuments();
+      return root.bookList.length;
     }
   },
   Mutation: {
@@ -200,6 +201,8 @@ const resolvers = {
 
       if (!authorPresent) {
         const author = new Author({ name: args.author });
+        book = new Book({ ...args, author });
+        author.bookList = [book];
         try {
           await author.save();
         } catch (error) {
@@ -207,10 +210,12 @@ const resolvers = {
             invalidArgs: args,
           })
         }
-        book = new Book({ ...args, author });
       }
-      else 
+      else {
         book = new Book({ ...args, author: authorPresent})
+        authorPresent.bookList.push(book);
+        await authorPresent.save();
+      }
 
       try {
         await book.save();

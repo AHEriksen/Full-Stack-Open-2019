@@ -9,7 +9,7 @@ const Books = ({ books, genreBooks, show }) => {
   useEffect(() => {
     const fetchBooks = async () => {
       if (selectedGenre === 'all genres') {
-        if (!books.loading) {
+        if (!books.loading && books.data) {
           setShownBooks(books.data.allBooks);
         }
       }
@@ -23,8 +23,7 @@ const Books = ({ books, genreBooks, show }) => {
     };
 
     fetchBooks();
-  }, [books.data.allBooks, selectedGenre]);
-
+  }, [books.data, selectedGenre]);
 
   const uniqueGenres = () => {
     let genres = books.data.allBooks.map(book => book.genres).flat();
@@ -37,7 +36,7 @@ const Books = ({ books, genreBooks, show }) => {
   if (!show) {
     return null;
   }
-  else if (books.loading)
+  else if (books.loading || !shownBooks)
     return <div>loading...</div>;
   else {
     return (
