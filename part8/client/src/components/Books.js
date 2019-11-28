@@ -9,17 +9,20 @@ const Books = ({ books, genreBooks, show }) => {
   console.log(books);
 
   useEffect(() => {
+    console.log('books: enters useEffect');
     const fetchBooks = async () => {
       if (selectedGenre === 'all genres') {
         if (!books.loading) {
+          console.log('books: sets books');
           setShownBooks(books.data.allBooks);
         }
       }
       else {
         const { data } = await client.query({
           query: genreBooks,
-          variables: { genre: selectedGenre }
+          variables: { genre: selectedGenre },
         });
+        console.log('books: fetches');
         setShownBooks(data.allBooks);
       }
     };

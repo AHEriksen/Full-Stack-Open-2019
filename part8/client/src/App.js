@@ -103,7 +103,7 @@ const App = () => {
 
   const [addBook] = useMutation(CREATE_BOOK, {
     onError: handleError,
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
   });
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     onError: handleError,

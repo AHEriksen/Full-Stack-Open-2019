@@ -6,7 +6,7 @@ const Recommendations = ({ show, user, books, genreBooks }) => {
   const client = useApolloClient();
 
   useEffect( () => {
-    console.log('enters useEffect');
+    console.log('recommend: enters useEffect');
     const fetchBooks = async () => {
       if (!user.loading && !books.loading) {
         console.log('fetches');
@@ -19,7 +19,7 @@ const Recommendations = ({ show, user, books, genreBooks }) => {
     };
 
     fetchBooks();
-  }, [books.data.allBooks]);
+  }, [books.data.allBooks, user.data.me]);
 
   if (!show)
     return null;
