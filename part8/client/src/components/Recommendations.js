@@ -6,10 +6,8 @@ const Recommendations = ({ show, user, books, genreBooks }) => {
   const client = useApolloClient();
 
   useEffect( () => {
-    console.log('recommend: enters useEffect');
     const fetchBooks = async () => {
       if (!user.loading && !books.loading) {
-        console.log('fetches');
         const { data } = await client.query({
           query: genreBooks,
           variables: { genre: user.data.me.favoriteGenre }

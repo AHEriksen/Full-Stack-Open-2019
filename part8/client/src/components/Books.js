@@ -6,14 +6,10 @@ const Books = ({ books, genreBooks, show }) => {
   const [shownBooks, setShownBooks] = useState(null);
   const client = useApolloClient();
 
-  console.log(books);
-
   useEffect(() => {
-    console.log('books: enters useEffect');
     const fetchBooks = async () => {
       if (selectedGenre === 'all genres') {
         if (!books.loading) {
-          console.log('books: sets books');
           setShownBooks(books.data.allBooks);
         }
       }
@@ -22,7 +18,6 @@ const Books = ({ books, genreBooks, show }) => {
           query: genreBooks,
           variables: { genre: selectedGenre },
         });
-        console.log('books: fetches');
         setShownBooks(data.allBooks);
       }
     };

@@ -5,7 +5,7 @@ import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
 import { gql } from 'apollo-boost';
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks';
 
 const ALL_AUTHORS = gql`
 {
@@ -25,6 +25,7 @@ const ALL_BOOKS = gql`
       name
     }
     genres
+    id
   }
 }`;
 
@@ -74,6 +75,7 @@ const CREATE_BOOK = gql`
         name
       }
       genres
+      id
     }
   }`;
 
@@ -84,6 +86,19 @@ const EDIT_AUTHOR = gql`
       born
     }
   }`;
+
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      published
+      author {
+        name
+      }
+      genres
+    }
+  }`;
+
 
 const App = () => {
   const client = useApolloClient();
@@ -116,6 +131,28 @@ const App = () => {
   const authors = useQuery(ALL_AUTHORS);
   const books = useQuery(ALL_BOOKS);
   const user = useQuery(ME);
+
+  const updateCache = (addedBook) => {
+    const includedIn = (arr, obj) => arr.map(book => book.id).includes(obj.id);
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS });
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      dataInStore.allBooks.push(addedBook);
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: dataInStore
+      });
+    }
+  };
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+      const addedBook = subscriptionData.data.bookAdded;
+      alert(`'${addedBook.title}' added`);
+      updateCache(addedBook);
+    }
+  });
 
 
   const logout = () => {
